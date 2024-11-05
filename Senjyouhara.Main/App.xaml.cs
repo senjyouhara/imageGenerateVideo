@@ -1,9 +1,11 @@
 ﻿using Senjyouhara.Common.Log;
 using Senjyouhara.Main.Views;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using Senjyouhara.Main.Config;
 
 namespace Senjyouhara.Main
 {
@@ -12,12 +14,10 @@ namespace Senjyouhara.Main
     /// </summary>
     public partial class App : Application
     {
-
-
         public App()
         {
             //Task线程内未捕获异常处理事件
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;//Task异常 
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException; //Task异常 
 
             //UI线程未捕获异常处理事件（UI主线程）
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
@@ -68,7 +68,6 @@ namespace Senjyouhara.Main
         }
 
 
-
         //UI线程未捕获异常处理事件（UI主线程）
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
@@ -84,7 +83,6 @@ namespace Senjyouhara.Main
             {
                 e.Handled = true;
             }
-
         }
     }
 }

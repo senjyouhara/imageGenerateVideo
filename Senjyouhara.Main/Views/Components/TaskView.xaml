@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Senjyouhara.Main.Views.Components.TaskView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Senjyouhara.Main.Views.Components"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:ui="clr-namespace:Senjyouhara.UI.Controls;assembly=Senjyouhara.UI"
+             mc:Ignorable="d"
+             Height="450" Width="800">
+    <Grid>
+        
+    </Grid>
+</UserControl>

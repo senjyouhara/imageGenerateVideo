@@ -1,6 +1,7 @@
 ﻿using HandyControl.Controls;
 using System;
 using Senjyouhara.Main.ViewModels;
+using System.Windows.Controls;
 
 namespace Senjyouhara.Main.Views
 {

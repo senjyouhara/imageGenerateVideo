@@ -1,5 +1,4 @@
-﻿using Caliburn.Micro;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,27 +9,27 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Threading;
+using Stylet;
+using StyletIoC;
 
 namespace Senjyouhara.Main.ViewModels
 {
     public class StartLoadingViewModel : Conductor<IScreen>
     {
         private IWindowManager _WindowManager;
-        public StartLoadingViewModel(IWindowManager manager)
+        private IContainer container;
+        public StartLoadingViewModel(IWindowManager manager, IContainer container)
         {
             _WindowManager = manager;
+            this.container = container;
         }
         
-        public async void CloseHandle()
+        public void CloseHandle()
         {
-            var model = IoC.Get<ShellViewModel>();
-            await _WindowManager.ShowWindowAsync(model);
-            await CloseForm();
+            var model = container.Get<ShellViewModel>();
+            _WindowManager.ShowWindow(model);
         }
 
-        public Task CloseForm()
-        {
-            return TryCloseAsync();
-        }
+      
     }
 }

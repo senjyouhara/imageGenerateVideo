@@ -12,10 +12,10 @@ namespace Senjyouhara.Main.Core.Manager.Dialog
         /// The parameters from the dialog.
         /// </summary>
         IDialogParameters Parameters { get; set; }
-
+        
         /// <summary>
         /// The result of the dialog.
         /// </summary>
-        ButtonResult Result { get; }
+        ButtonResult Result { get; set; }
     }
 }

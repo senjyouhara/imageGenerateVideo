@@ -25,6 +25,7 @@ hs_err_pid*
 
 # IDE Files #
 *.iml
+.vs
 .idea
 .project
 .settings
@@ -160,4 +161,5 @@ dkms.conf
 bin
 obj
 packages
-
+vs_mlrt
+mkvtoolnix

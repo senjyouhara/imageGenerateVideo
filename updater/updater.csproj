@@ -24,4 +24,8 @@
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Senjyouhara.Common\Senjyouhara.Common.csproj" />
+  </ItemGroup>
 </Project>

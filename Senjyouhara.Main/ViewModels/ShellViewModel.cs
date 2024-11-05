@@ -1,30 +1,76 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using PropertyChanged;
 using Senjyouhara.Common.Base;
 using Senjyouhara.Common.Log;
 using Senjyouhara.Main.Config;
+using Stylet;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Shell;
+using Senjyouhara.Common.Utils;
+using Senjyouhara.Main.Core.Manager.Dialog;
+using Senjyouhara.Main.Model;
+using Senjyouhara.Main.Views;
+using StyletIoC;
 
 namespace Senjyouhara.Main.ViewModels
 {
     [AddINotifyPropertyChangedInterface]
-    public class ShellViewModel : Conductor<IScreen>
+    public class ShellViewModel : Conductor<Conductor<IMyScreen>.Collection.OneActive>, IHandle<TaskbarModel>
     {
+        private IEventAggregator eventAggregator;
+        private MainViewModel MainViewModel;
+
+        public ShellViewModel(StyletIoC.IContainer _container, IEventAggregator _eventAggregator)
+        {
+            eventAggregator = _eventAggregator;
+            container = _container;
+            MainViewModel = container.Get<MainViewModel>();
+        }
 
         public string Title { get; set; }
 
-        private IEventAggregator _eventAggregator;
-        public ShellViewModel(IWindowManager windowManager)
+        public StyletIoC.IContainer container { get; set; }
+
+        public void Handle(TaskbarModel message)
         {
-            Title = "一图流（图片生成视频）" + " - v" + AppConfig.Version;
-            _eventAggregator = new EventAggregator();
-            _eventAggregator.SubscribeOnUIThread(this);
-            Task.Run(async () =>
+            var taskBarInfo = ((ShellView)View)?.TaskBarInfo;
+            Execute.OnUIThread(() =>
             {
-                var model = IoC.Get<MainViewModel>();
-                await ActivateItemAsync(model);
+                if (taskBarInfo != null)
+                {
+                    taskBarInfo.ProgressState = message.State;
+                    taskBarInfo.ProgressValue = message.Value;
+                    if (message.Value >= 1.0)
+                    {
+                        taskBarInfo.ProgressValue = 0;
+                        FlashWindow.Flash((ShellView)View, 3);
+                    }
+                }
             });
         }
 
+        public void CloseCommand()
+        {
+            var closeCommand = MainViewModel.CloseCommand();
+            if (closeCommand)
+            {
+                CloseItem(MainViewModel);
+                System.Windows.Application.Current.Shutdown();
+            }
+        }
+
+        protected override void OnInitialActivate()
+        {
+            eventAggregator.Subscribe(this, "ProcessBar");
+            Title = AppConfig.Name + " - v" + AppConfig.Version;
+            var model = MainViewModel;
+            Task.Run(() => { ActivateItem(model); });
+        }
     }
 }

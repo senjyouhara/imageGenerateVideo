@@ -2,10 +2,10 @@
     x:Class="Senjyouhara.Main.Views.UpdateView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:cal="http://www.caliburnproject.org"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
     xmlns:ui="clr-namespace:Senjyouhara.UI.Controls;assembly=Senjyouhara.UI"
     x:Name="win"
     Width="470"
@@ -87,7 +87,7 @@
                         Width="100"
                         Height="35"
                         Margin="5,10"
-                        cal:Message.Attach="[Event Click] = [Action CloseModal]"
+                        Command="{s:Action CloseModal}"
                         Content="取  消"
                         Visibility="{Binding CancelVisibility}" />
 
@@ -96,7 +96,7 @@
                         Width="100"
                         Height="35"
                         Margin="5,10"
-                        cal:Message.Attach="[Event Click] = [Action StartUpdate]"
+                        Command="{s:Action StartUpdate}"
                         Content="确  定" />
                 </StackPanel>
 
@@ -198,7 +198,7 @@
                         Width="100"
                         Height="35"
                         Margin="5,10"
-                        cal:Message.Attach="[Event Click] = [Action CloseModal]"
+                        Click="{s:Action CloseModal}"
                         Content="确  定" />
                 </StackPanel>
 

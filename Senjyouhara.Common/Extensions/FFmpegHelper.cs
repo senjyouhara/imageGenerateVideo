@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 
 namespace Senjyouhara.Common.Extensions
@@ -33,11 +34,13 @@ namespace Senjyouhara.Common.Extensions
         /// <param name="destVideo"></param>
         public static bool MergeVideo(string video1, string video2, string destVideo)
         {
-            string param = $"-y -i \"{video1}\" -i \"{video2}\" -strict -2 -acodec copy -vcodec copy -f mp4 \"{destVideo}\"";
+            string param =
+                $"-y -i \"{video1}\" -i \"{video2}\" -strict -2 -acodec copy -vcodec copy -f mp4 \"{destVideo}\"";
             if (video1 == null || !File.Exists(video1))
             {
                 param = $"-y -i \"{video2}\" -strict -2 -acodec copy -vcodec copy -f mp4 \"{destVideo}\"";
             }
+
             if (video2 == null || !File.Exists(video2))
             {
                 param = $"-y -i \"{video1}\" -strict -2 -acodec copy \"{destVideo}\"";
@@ -46,10 +49,16 @@ namespace Senjyouhara.Common.Extensions
             // 支持flac格式音频
             //param += " -strict -2";
 
-            if (!File.Exists(video1) && !File.Exists(video2)) { return false; }
+            if (!File.Exists(video1) && !File.Exists(video2))
+            {
+                return false;
+            }
 
             // 如果存在
-            try { File.Delete(destVideo); }
+            try
+            {
+                File.Delete(destVideo);
+            }
             catch (IOException e)
             {
                 Log.Log.Error("MergeVideo()发生IO异常", e);
@@ -60,8 +69,15 @@ namespace Senjyouhara.Common.Extensions
 
             try
             {
-                if (video1 != null) { File.Delete(video1); }
-                if (video2 != null) { File.Delete(video2); }
+                if (video1 != null)
+                {
+                    File.Delete(video1);
+                }
+
+                if (video2 != null)
+                {
+                    File.Delete(video2);
+                }
             }
             catch (IOException e)
             {
@@ -140,10 +156,12 @@ namespace Senjyouhara.Common.Extensions
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <param name="action"></param>
-        public static void Delogo(string video, string destVideo, int x, int y, int width, int height, Action<string> action)
+        public static void Delogo(string video, string destVideo, int x, int y, int width, int height,
+            Action<string> action)
         {
             // ffmpeg -y -i "video.mp4" -vf delogo=x=1670:y=50:w=180:h=70:show=1 "delogo.mp4"
-            string param = $"-y -i \"{video}\" -vf delogo=x={x}:y={y}:w={width}:h={height}:show=0 \"{destVideo}\" -hide_banner";
+            string param =
+                $"-y -i \"{video}\" -vf delogo=x={x}:y={y}:w={width}:h={height}:show=0 \"{destVideo}\" -hide_banner";
             ExcuteProcess(exec, param, null, (s, e) =>
             {
                 Console.WriteLine(e.Data);
@@ -212,38 +230,48 @@ namespace Senjyouhara.Common.Extensions
         /// <param name="arg">参数</param>
         /// <param name="workingDirectory">工作路径</param>
         /// <param name="output">输出重定向</param>
-        private static void ExcuteProcess(string exe, string arg, string workingDirectory, DataReceivedEventHandler output)
+        ///
+        public static void ExcuteProcess(string exe, string arg, string workingDirectory,
+            DataReceivedEventHandler output)
         {
-            using (var p = new Process())
-            {
-                p.StartInfo.FileName = exe;
-                p.StartInfo.Arguments = arg;
-
-                // 工作目录
-                if (workingDirectory != null)
-                {
-                    p.StartInfo.WorkingDirectory = workingDirectory;
-                }
-
-                p.StartInfo.UseShellExecute = false;    //输出信息重定向
-                p.StartInfo.CreateNoWindow = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.RedirectStandardOutput = true;
-
-                // 将 StandardErrorEncoding 改为 UTF-8 才不会出现中文乱码
-                p.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
-                p.StartInfo.StandardErrorEncoding = System.Text.Encoding.UTF8;
-
-                p.OutputDataReceived += output;
-                p.ErrorDataReceived += output;
-
-                p.Start();                    //启动线程
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
-                p.WaitForExit();            //等待进程结束
-            }
+            ExcuteProcess(exe, arg, workingDirectory, output, null);
         }
 
+        public static void ExcuteProcess(string exe, string arg, string workingDirectory,
+            DataReceivedEventHandler output, Process process)
+        {
+            var p = process ?? new Process();
+            p.StartInfo.FileName = exe;
+            p.StartInfo.Arguments = arg;
+
+            // 工作目录
+            if (workingDirectory != null)
+            {
+                p.StartInfo.WorkingDirectory = workingDirectory;
+            }
+
+            p.StartInfo.UseShellExecute = false; //是否使用操作系统shell启动
+            p.StartInfo.CreateNoWindow = true; //不创建窗口  
+            p.StartInfo.RedirectStandardInput = true; //打开流输入  
+            p.StartInfo.RedirectStandardOutput = true; //打开流输出  
+            p.StartInfo.RedirectStandardError = true; //打开错误流  
+
+            // 将 StandardErrorEncoding 改为 UTF-8 才不会出现中文乱码
+            p.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
+            p.StartInfo.StandardErrorEncoding = System.Text.Encoding.UTF8;
+            // p.EnableRaisingEvents = true;      // 启用Exited事件  
+            // p.Exited += exitHandle;   // 注册进程结束事件  
+
+            p.OutputDataReceived += output;
+            p.ErrorDataReceived += output;
+
+            p.Start(); //启动线程
+            // p.StandardInput.WriteLine(arg);
+            // p.StandardInput.WriteLine("exit");
+            p.BeginOutputReadLine();
+            p.BeginErrorReadLine();
+
+            p.WaitForExit(); //等待进程结束
+        }
     }
 }
-

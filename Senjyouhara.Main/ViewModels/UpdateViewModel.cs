@@ -1,17 +1,17 @@
-﻿using Caliburn.Micro;
-using PropertyChanged;
+﻿using PropertyChanged;
 using Senjyouhara.Common.Base;
 using Senjyouhara.Common.Models;
 using Senjyouhara.Common.Utils;
 using Senjyouhara.Main.Config;
+using Senjyouhara.Main.Core.Manager.Dialog;
 using Senjyouhara.Main.Views;
+using Stylet;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -21,12 +21,23 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Shell;
 using System.Windows.Threading;
+using Senjyouhara.Common.Log;
 
 namespace Senjyouhara.Main.ViewModels
 {
     [AddINotifyPropertyChangedInterface]
-    internal class UpdateViewModel : Screen
+    internal class UpdateViewModel: Screen
     {
+        private UpdateConfig.UpdateDataEntity _updateInfo;
+
+        private TaskbarItemInfo taskBarInfo;
+
+        public UpdateViewModel()
+        {
+            taskBarInfo =  ((ShellView) Application.Current.MainWindow).TaskBarInfo;
+            Init();
+        }
+
         public string Status { get; set; } = "check";
         public double Percent { get; set; } = 0;
         public double FileTotalSize { get; set; } = 0;
@@ -39,17 +50,6 @@ namespace Senjyouhara.Main.ViewModels
         public DelegateCommand CloseCommand { get; set; }
 
         public Visibility CancelVisibility { get; set; } = UpdateConfig.IsForceUpdate ? Visibility.Collapsed : Visibility.Visible;
-
-        private UpdateConfig.UpdateDataEntity _updateInfo;
-
-        private TaskbarItemInfo taskBarInfo;
-
-        public UpdateViewModel()
-        {
-            taskBarInfo =  ((ShellView) Application.Current.MainWindow).TaskBarInfo;
-            Init();
-        }
-
 
         private void Init()
         {
@@ -118,8 +118,7 @@ namespace Senjyouhara.Main.ViewModels
 
         public void CloseModal()
         {
-            CloseCommand?.Execute();
-            TryCloseAsync();
+            RequestClose(null);
         }
 
         public async Task<bool> DownloadFile(string url, string localpath)
@@ -139,7 +138,8 @@ namespace Senjyouhara.Main.ViewModels
                     });
                     var result = await h.DownloadExecuteAsync(new BaseRequest() { Url = url }, localpath, (p, cancelToken) =>
                     {
-                        Debug.WriteLine(p.ToString());
+                        
+                        Log.Info($"download: {p.ToString()}");
                         if (Application.Current == null)
                         {
                             CloseModal();
@@ -167,7 +167,7 @@ namespace Senjyouhara.Main.ViewModels
                 }
                 catch (Exception ex)
                 {
-
+                    Log.Error(null, ex);
                 }
 
                 return false;
@@ -247,10 +247,9 @@ namespace Senjyouhara.Main.ViewModels
 
         public void RunUpdateExe()
         {
-            Debug.WriteLine(AppConfig.Name);
-            Debug.WriteLine(AppConfig.Version);
+            Log.Info(AppConfig.Name);
+            Log.Info(AppConfig.Version);
             Process.Start(Directory.GetCurrentDirectory() + @$"\update.exe --name={AppConfig.Name} --version ={AppConfig.Version}");
         }
-
     }
 }

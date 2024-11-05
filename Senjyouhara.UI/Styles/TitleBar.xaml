@@ -108,6 +108,7 @@
                                 FontFamily="microsoft Yahei"
                                 FontSize="{TemplateBinding FontSize}"
                                 FontWeight="Bold"
+                                SnapsToDevicePixels="True"
                                 Foreground="{TemplateBinding Foreground}"
                                 Text="{TemplateBinding Title}" />
                         </Grid>
@@ -132,7 +133,7 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                                 <Button
                                 x:Name="ButtonMinimize"
-                                Command="{Binding Path=ButtonCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Command="{TemplateBinding ButtonCommand}"
                                 CommandParameter="minimize"
                                 Cursor="Hand"
                                 VerticalContentAlignment="Top"
@@ -157,7 +158,7 @@
 
                                 <Button
                                 x:Name="ButtonMaximize"
-                                Command="{Binding Path=ButtonCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Command="{TemplateBinding ButtonCommand}"
                                 CommandParameter="maximize"
                                 Cursor="Hand"
                                 FocusVisualStyle="{x:Null}"
@@ -182,7 +183,7 @@
 
                                 <Button
                                 x:Name="ButtonRestore"
-                                Command="{Binding Path=ButtonCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Command="{TemplateBinding ButtonCommand}"
                                 CommandParameter="maximize"
                                 Cursor="Hand"
                                 FocusVisualStyle="{x:Null}"
@@ -206,9 +207,7 @@
                                 </Button>
 
                                 <Button
-                                x:Name="ButtonClose"
-                                Command="{Binding Path=ButtonCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                CommandParameter="close"
+                                x:Name="PART_ButtonClose"
                                 Cursor="Hand"
                                 FocusVisualStyle="{x:Null}"
                                 VerticalAlignment="Top"

@@ -9,14 +9,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.ComponentModel;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using Senjyouhara.Common.Base;
 
 namespace Senjyouhara.UI.Controls
 {
 
+    [TemplatePart(Name = "PART_ButtonClose", Type = typeof(ButtonBase))]
     public class TitleBar : UserControl
     {
+
+        private ButtonBase ButtonCloseHost;
+        
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             nameof(Title),
             typeof(string),
@@ -54,6 +59,14 @@ namespace Senjyouhara.UI.Controls
                 typeof(TitleBar),
                 new PropertyMetadata(null)
             );
+        
+        public static readonly DependencyProperty CloseCommandProperty =
+            DependencyProperty.Register(
+                nameof(CloseCommand),
+                typeof(ICommand),
+                typeof(TitleBar),
+                new PropertyMetadata(null)
+            );
 
         public static readonly DependencyProperty IsMaximizedProperty = DependencyProperty.Register(
             nameof(IsMaximized),
@@ -61,8 +74,15 @@ namespace Senjyouhara.UI.Controls
             typeof(TitleBar),
             new PropertyMetadata(false)
         );
-
-
+        
+        // [Category("Behavior")]
+        // public static readonly RoutedEvent OnCloseEvent =
+        //     EventManager.RegisterRoutedEvent(
+        //         "OnClose",
+        //         RoutingStrategy.Bubble,
+        //         typeof(RoutedEventHandler),
+        //         typeof(TitleBar));
+        
         public static readonly DependencyProperty IsCanMoveProperty = DependencyProperty.Register(
             nameof(IsCanMove),
             typeof(bool),
@@ -78,6 +98,21 @@ namespace Senjyouhara.UI.Controls
                 new PropertyMetadata(false)
             );
 
+        // Using a DependencyProperty as the backing store for ShowMinBtn.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowMinBtnProperty =
+            DependencyProperty.Register(nameof(ShowMinBtn), typeof(bool), typeof(TitleBar), new PropertyMetadata(true));
+
+        // Using a DependencyProperty as the backing store for ShowMaxBtn.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowMaxBtnProperty =
+            DependencyProperty.Register(nameof(ShowMaxBtn), typeof(bool), typeof(TitleBar), new PropertyMetadata(true));
+
+        private Window _parent;
+
+        public TitleBar()
+        {
+            SetValue(ButtonCommandProperty, new DelegateCommand<string>(TemplateButton_OnClick));
+            Loaded += TitleBar_loaded;
+        }
 
 
         public bool ShowMinBtn
@@ -86,23 +121,12 @@ namespace Senjyouhara.UI.Controls
             set { SetValue(ShowMinBtnProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for ShowMinBtn.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ShowMinBtnProperty =
-            DependencyProperty.Register(nameof(ShowMinBtn), typeof(bool), typeof(TitleBar), new PropertyMetadata(true));
-
-
 
         public bool ShowMaxBtn
         {
             get { return (bool)GetValue(ShowMaxBtnProperty); }
             set { SetValue(ShowMaxBtnProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for ShowMaxBtn.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ShowMaxBtnProperty =
-            DependencyProperty.Register(nameof(ShowMaxBtn), typeof(bool), typeof(TitleBar), new PropertyMetadata(true));
-
-
 
 
         public string Title
@@ -122,6 +146,7 @@ namespace Senjyouhara.UI.Controls
             get => GetValue(ExtendButtonsProperty);
             set => SetValue(ExtendButtonsProperty, value);
         }
+
         public object OverrideTitle
         {
             get => GetValue(OverrideTitleProperty);
@@ -135,23 +160,29 @@ namespace Senjyouhara.UI.Controls
         }
 
 
-
         public ICommand ButtonCommand
         {
             get => (ICommand)GetValue(ButtonCommandProperty);
         }
+
+        public ICommand CloseCommand
+        {
+            get => (ICommand)GetValue(CloseCommandProperty);
+            set => SetValue(CloseCommandProperty, value);
+        }
+
         public bool IsCanMove
         {
             get => (bool)GetValue(IsCanMoveProperty);
             set => SetValue(IsCanMoveProperty, value);
         }
+
         public bool IsMaximized
         {
             get => (bool)GetValue(IsMaximizedProperty);
             internal set => SetValue(IsMaximizedProperty, value);
         }
-        
-        private Window _parent;
+
         private Window ParentWindow => _parent = Window.GetWindow(this);
 
         private void TitleBar_loaded(object sender, RoutedEventArgs ev)
@@ -165,7 +196,6 @@ namespace Senjyouhara.UI.Controls
             {
                 RootGrid.MouseMove += (s, e) =>
                 {
-
                     if (IsCanMove)
                     {
                         if (e.LeftButton == MouseButtonState.Pressed)
@@ -192,21 +222,37 @@ namespace Senjyouhara.UI.Controls
             {
                 ParentWindow.MaxHeight = SystemParameters.WorkArea.Height;
             }
-
-            Console.WriteLine(ShowMinBtn);
-            Console.WriteLine(ShowMaxBtn);
         }
-
-        public TitleBar()
-        {           
-            SetValue(ButtonCommandProperty, new DelegateCommand<string>(TemplateButton_OnClick));
-            Loaded += TitleBar_loaded;
-        }
-
-        private void CloseWindow()
+        
+        
+        private void HandleOnCloseClick(object sender, RoutedEventArgs e)
         {
-            IsMaximized = false;
-            ParentWindow.Close();
+
+            if (CloseCommand != null)
+            {
+                CloseCommand.Execute(null);
+            }
+            else
+            {
+                ParentWindow.Close();
+            }
+            // RaiseEvent(new RoutedEventArgs(OnCloseEvent, this));
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            
+            if (ButtonCloseHost != null)
+            {
+                ButtonCloseHost.Click -= HandleOnCloseClick;
+            }
+            
+            ButtonCloseHost = GetTemplateChild("PART_ButtonClose") as ButtonBase;
+            if (ButtonCloseHost != null)
+            {
+                ButtonCloseHost.Click += HandleOnCloseClick;
+            }
         }
 
         private void MaximizeWindow()
@@ -229,18 +275,14 @@ namespace Senjyouhara.UI.Controls
             ParentWindow.WindowState = WindowState.Minimized;
         }
 
+
+
         private void TemplateButton_OnClick(string parameter)
         {
             string command = parameter;
 
-            Console.WriteLine("params" + parameter);
-
             switch (command)
             {
-                case "close":
-                    CloseWindow();
-                    break;
-
                 case "minimize":
                     MinimizeWindow();
                     break;

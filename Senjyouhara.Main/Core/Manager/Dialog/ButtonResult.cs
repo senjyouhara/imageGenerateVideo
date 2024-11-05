@@ -9,36 +9,16 @@ namespace Senjyouhara.Main.Core.Manager.Dialog
     public enum ButtonResult
     {
         /// <summary>
-        /// Abort.
+        /// Abort. 点弹框的X设定为该值
         /// </summary>
         Abort = 3,
         /// <summary>
-        /// Cancel.
+        /// Cancel.  点取消设定为该值
         /// </summary>
         Cancel = 2,
         /// <summary>
-        /// Ignore.
-        /// </summary>
-        Ignore = 5,
-        /// <summary>
-        /// No.
-        /// </summary>
-        No = 7,
-        /// <summary>
-        /// No result returned.
-        /// </summary>
-        None = 0,
-        /// <summary>
-        /// OK.
+        /// OK.  点确定设置为该值
         /// </summary>
         OK = 1,
-        /// <summary>
-        /// Retry.
-        /// </summary>
-        Retry = 4,
-        /// <summary>
-        /// Yes.
-        /// </summary>
-        Yes = 6
     }
 }

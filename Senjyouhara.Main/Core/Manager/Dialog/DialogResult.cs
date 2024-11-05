@@ -16,7 +16,7 @@ namespace Senjyouhara.Main.Core.Manager.Dialog
         /// <summary>
         /// The result of the dialog.
         /// </summary>
-        public ButtonResult Result { get; private set; } = ButtonResult.None;
+        public ButtonResult Result { get;  set; } = ButtonResult.Cancel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogResult"/> class.

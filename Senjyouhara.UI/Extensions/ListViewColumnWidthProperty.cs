@@ -1,29 +1,38 @@
 ﻿
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Senjyouhara.UI.Controls
+namespace Senjyouhara.UI.Extensions
 {
-    public sealed class RangeColumn : LayoutColumn
+    public class ListViewColumnWidthProperty
     {
 
         public static readonly DependencyProperty MinWidthProperty =
             DependencyProperty.RegisterAttached(
                 "MinWidth",
                 typeof(double),
-                typeof(RangeColumn));
+                typeof(ListViewColumnWidthProperty), new FrameworkPropertyMetadata(double.NaN));
 
         public static readonly DependencyProperty MaxWidthProperty =
             DependencyProperty.RegisterAttached(
                 "MaxWidth",
                 typeof(double),
-                typeof(RangeColumn));
+                typeof(ListViewColumnWidthProperty), new FrameworkPropertyMetadata(double.NaN));
 
-        private RangeColumn()
-        {
-        } 
+        public static readonly DependencyProperty WidthProperty = DependencyProperty.RegisterAttached(
+            name: "Width",
+            propertyType: typeof(GridLength),
+            ownerType: typeof(ListViewColumnWidthProperty),
+            defaultMetadata: new FrameworkPropertyMetadata(GridLength.Auto));
 
+        public static GridLength GetWidth(DependencyObject dependencyObject) 
+            => (GridLength)dependencyObject.GetValue(WidthProperty);
+
+        public static void SetWidth(DependencyObject dependencyObject, string value) 
+            => dependencyObject.SetValue(WidthProperty, value);
+        
         public static double GetMinWidth(DependencyObject obj)
         {
             return (double)obj.GetValue(MinWidthProperty);
@@ -43,33 +52,15 @@ namespace Senjyouhara.UI.Controls
         {
             obj.SetValue(MaxWidthProperty, maxWidth);
         } 
-
-        public static bool IsRangeColumn(GridViewColumn column)
+        
+        public static bool IsValidRangeColumn(GridViewColumn column)
         {
             if (column == null)
             {
                 return false;
             }
-            return GetRangeMinWidth(column).HasValue || GetRangeMaxWidth(column).HasValue;
+            return !double.IsNaN(GetMinWidth(column)) || !double.IsNaN(GetMaxWidth(column));
         } 
-
-        public static double? GetRangeMinWidth(GridViewColumn column)
-        {
-            return GetColumnWidth(column, MinWidthProperty);
-        } 
-
-        public static double? GetRangeMaxWidth(GridViewColumn column)
-        {
-            return GetColumnWidth(column, MaxWidthProperty);
-        } 
-
-        public static GridViewColumn ApplyWidth(GridViewColumn gridViewColumn, double minWidth, double width, double maxWidth)
-        {
-            SetMinWidth(gridViewColumn, minWidth);
-            gridViewColumn.Width = width;
-            SetMaxWidth(gridViewColumn, maxWidth);
-            return gridViewColumn;
-        } 
-
+        
     } 
 }
