@@ -1,0 +1,36 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Senjyouhara.UI.Controls"
+                    xmlns:hc="https://handyorg.github.io/handycontrol">
+    <Style TargetType="{x:Type controls:ImageViewer}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ImageViewer">
+                    <Grid>
+                        <hc:ImageViewer Background="{DynamicResource SecondaryRegionBrush}"
+                                        ShowImgMap="{TemplateBinding ShowImgMap}"
+                                        Uri="{TemplateBinding Uri}"
+                                        ShowToolBar="{TemplateBinding ShowToolBar}"
+                                        IsFullScreen="{TemplateBinding IsFullScreen}"
+                                        MoveGesture="{TemplateBinding MoveGesture}"
+                                        Width="{TemplateBinding Width}"
+                                        Height="{TemplateBinding Height}"
+                                        ImageSource="{TemplateBinding ImageSource}" />
+                        <!-- 上一页下一页 -->
+                        <Grid VerticalAlignment="Center" Background="{DynamicResource DarkOpacityBrush}">
+                            <Grid.Visibility>
+                                <MultiBinding Converter="{StaticResource BooleanArr2VisibilityConverter}">
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsShowPrevNext" />
+                                </MultiBinding>
+                            </Grid.Visibility>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

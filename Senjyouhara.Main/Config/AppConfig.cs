@@ -10,6 +10,7 @@ namespace Senjyouhara.Main.Config
 {
     public class AppConfig
     {
+        public static string Title = "图像生成视频";
         public static string Name = "";
         public static string Version = "";
         static AppConfig()

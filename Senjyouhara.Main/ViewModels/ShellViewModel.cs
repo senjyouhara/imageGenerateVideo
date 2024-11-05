@@ -68,7 +68,7 @@ namespace Senjyouhara.Main.ViewModels
         protected override void OnInitialActivate()
         {
             eventAggregator.Subscribe(this, "ProcessBar");
-            Title = AppConfig.Name + " - v" + AppConfig.Version;
+            Title = AppConfig.Title + " - v" + AppConfig.Version;
             var model = MainViewModel;
             Task.Run(() => { ActivateItem(model); });
         }

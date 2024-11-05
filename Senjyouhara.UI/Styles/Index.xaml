@@ -6,7 +6,7 @@
         <ResourceDictionary Source="pack://application:,,,/Senjyouhara.UI;component/Styles/TitleBar.xaml" />
         <!-- <ResourceDictionary Source="pack://application:,,,/Senjyouhara.UI;component/Styles/ListView.xaml" /> -->
         <ResourceDictionary Source="pack://application:,,,/Senjyouhara.UI;component/Styles/MessageBoxWindowStyle.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/Senjyouhara.UI;component/Styles/FormItem.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Senjyouhara.UI;component/Styles/ImageView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

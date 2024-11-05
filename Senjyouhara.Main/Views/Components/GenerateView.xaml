@@ -51,6 +51,10 @@
                          Text="{Binding MusicInput}">
                 </TextBox>
             </DockPanel>
+            <Image Source="pack://application:,,,/Resources/loading.png" Height="400" />
+            <!-- <hc:ImageViewer Background="{DynamicResource SecondaryRegionBrush}" -->
+            <!--                 Width="600" Height="330" -->
+            <!--                 ImageSource="pack://application:,,,/Resources/78087664f88cf7571.jpg" /> -->
         </StackPanel>
         
     </Grid>
