@@ -38,10 +38,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="icon.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Costura.Fody" Version="6.0.0-beta0000">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -88,11 +84,12 @@
     </Page>
   </ItemGroup>
     <ItemGroup>
-        <Resource Include="Resources\78087664f88cf7571.jpg">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Resource>
-        <Resource Include="Resources\loading.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Resource>
+		<Resource Include="Resources\78087664f88cf7571.jpg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\loading.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="icon.png" />
   </ItemGroup>
 </Project>
