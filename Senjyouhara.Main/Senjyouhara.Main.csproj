@@ -79,12 +79,6 @@
     <None Update="Resources\loading.mp4">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\loading.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-      <None Update="Resources\78087664f88cf7571.jpg">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Components\GenerateView.xaml">
@@ -94,6 +88,11 @@
     </Page>
   </ItemGroup>
     <ItemGroup>
-        <None Remove="Assets\78087664f88cf7571.jpg"/>
+        <Resource Include="Resources\78087664f88cf7571.jpg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\loading.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
   </ItemGroup>
 </Project>

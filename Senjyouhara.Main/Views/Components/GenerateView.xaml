@@ -51,10 +51,13 @@
                          Text="{Binding MusicInput}">
                 </TextBox>
             </DockPanel>
-            <Image Source="pack://application:,,,/Resources/loading.png" Height="400" />
-            <!-- <hc:ImageViewer Background="{DynamicResource SecondaryRegionBrush}" -->
+            <Button Command="{s:Action ImgCommand}">显示图片</Button>
+            <!-- <ui:ImageViewer Background="{DynamicResource SecondaryRegionBrush}" -->
             <!--                 Width="600" Height="330" -->
-            <!--                 ImageSource="pack://application:,,,/Resources/78087664f88cf7571.jpg" /> -->
+            <!--                 ImageSourceList="{Binding ImgList}" -->
+            <!--                 IsShowPrevNext="True" -->
+            <!--                 Uri="{Binding ImgList[0]}" -->
+            <!--                  /> -->
         </StackPanel>
         
     </Grid>

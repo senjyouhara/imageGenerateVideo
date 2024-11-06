@@ -7,6 +7,7 @@
         <!-- <ResourceDictionary Source="pack://application:,,,/Senjyouhara.UI;component/Styles/ListView.xaml" /> -->
         <ResourceDictionary Source="pack://application:,,,/Senjyouhara.UI;component/Styles/MessageBoxWindowStyle.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Senjyouhara.UI;component/Styles/ImageView.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Senjyouhara.UI;component/Styles/ImageBrowser.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

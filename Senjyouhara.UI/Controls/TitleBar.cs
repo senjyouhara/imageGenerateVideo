@@ -110,7 +110,8 @@ namespace Senjyouhara.UI.Controls
 
         public TitleBar()
         {
-            SetValue(ButtonCommandProperty, new DelegateCommand<string>(TemplateButton_OnClick));
+            var command = GetValue(ButtonCommandProperty);
+            if (command == null) SetValue(ButtonCommandProperty, new DelegateCommand<string>(TemplateButton_OnClick));
             Loaded += TitleBar_loaded;
         }
 

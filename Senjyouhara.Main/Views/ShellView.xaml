@@ -10,11 +10,13 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:s="https://github.com/canton7/Stylet"
     xmlns:ui="clr-namespace:Senjyouhara.UI.Controls;assembly=Senjyouhara.UI"
+    xmlns:config="clr-namespace:Senjyouhara.Main.Config"
     Width="880"
     Height="600"
     AllowsTransparency="True"
     Background="Transparent"
     ResizeMode="CanMinimize"
+    Title="{x:Static config:AppConfig.Title}"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">

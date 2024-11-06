@@ -67,7 +67,6 @@ public class PanelExtensions
     static void OnSpacingChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         var Panel = sender as Panel;
-
         Panel.SizeChanged -= OnSpacingUpdated;
         Panel.SizeChanged += OnSpacingUpdated;
 
