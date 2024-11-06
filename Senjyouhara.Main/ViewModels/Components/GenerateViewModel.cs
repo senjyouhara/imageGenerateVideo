@@ -51,7 +51,7 @@ public class GenerateViewModel: MyScreen
 
     public void ImgCommand()
     {
-        var img = new ImageBrowser(ImgList[0]);
+        var img = new ImageBrowser(ImgList[0], ImgList);
         img.IsFullScreen = true;
         img.Show();
     }

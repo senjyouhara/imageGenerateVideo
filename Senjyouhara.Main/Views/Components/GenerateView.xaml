@@ -51,7 +51,7 @@
                          Text="{Binding MusicInput}">
                 </TextBox>
             </DockPanel>
-            <Button Command="{s:Action ImgCommand}">显示图片</Button>
+            <!-- <Button Command="{s:Action ImgCommand}">显示图片</Button> -->
             <!-- <ui:ImageViewer Background="{DynamicResource SecondaryRegionBrush}" -->
             <!--                 Width="600" Height="330" -->
             <!--                 ImageSourceList="{Binding ImgList}" -->
