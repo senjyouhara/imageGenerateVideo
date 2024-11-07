@@ -14,99 +14,175 @@
         <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Border Background="#1b6093" HorizontalAlignment="Stretch" CornerRadius="4">
-        <Grid  Margin="12">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid VerticalAlignment="Center">
-                <Border Background="#000000" Opacity="0.3" Height="2"></Border>
-                <Border Background="#dddddd" Height="2"></Border>
-                <Border
-                    RenderTransformOrigin="20 0"
-                    BorderBrush="#dddddd" HorizontalAlignment="Left" BorderThickness="2" Width="20" Height="20"
-                    CornerRadius="20" Background="#1b6093">
-                    <Border.RenderTransform>
-                        <TranslateTransform x:Name="Progressbar" X="0" Y="0"></TranslateTransform>
-                    </Border.RenderTransform>
-                </Border>
-                <Grid.Triggers>
-                    <EventTrigger RoutedEvent="MouseEnter">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetName="Progressbar"
-                                                 Storyboard.TargetProperty="X" Duration="0:0:8" To="195">
-                                </DoubleAnimation>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Grid.Triggers>
-            </Grid>
-            <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
-                <!-- Previous -->
-                <Button x:Name="PreviousButton" Style="{StaticResource TransparentButton}"
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,13,0"
-                        ToolTip="上一个" Command="{s:Action PreviousCommand}">
-                    <TextBlock Text="&#xe670;" FontFamily="{StaticResource MusicIconfont}"
-                               Foreground="{StaticResource MusicFontColor}"
-                               FontSize="32" />
-                </Button>
-                <!-- Play and pause -->
-                <Grid>
-                    <!-- Ring -->
-                    <!-- <ProgressBar Value="40"></ProgressBar> -->
-                    <!-- <dc:ProgressRing Width="20" Height="20" Foreground="{DynamicResource Brush_PrimaryText}" IsActive="True" Visibility="{Binding IsLoadingTrack,Converter={StaticResource BooleanToVisibilityConverter}}"/> -->
-                    <Grid
-                        Visibility="{Binding IsLoadingTrack,Converter={StaticResource InvertingBooleanToVisibilityConverter}}">
-                        <!-- Play -->
-                        <Button x:Name="PlayButton" Style="{StaticResource TransparentButton}"
-                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="播放"
-                                Visibility="{Binding ShowPause,Converter={StaticResource InvertingBooleanToVisibilityConverter}}"
-                                Command="{s:Action PlayCommand}">
-                            <TextBlock Text="&#xe66b;" FontFamily="{StaticResource MusicIconfont}"
-                                       Foreground="{StaticResource MusicFontColor}"
-                                       FontSize="32" />
-                        </Button>
-                        <!-- Pause -->
-                        <Button x:Name="PauseButton" Style="{StaticResource TransparentButton}"
-                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="暂停"
-                                Visibility="{Binding ShowPause,Converter={StaticResource BooleanToVisibilityConverter}}"
-                                Command="{s:Action PauseCommand}">
-                            <TextBlock Text="&#xe66c;" FontFamily="{StaticResource MusicIconfont}"
-                                       Foreground="{StaticResource MusicFontColor}"
-                                       FontSize="32" />
-                        </Button>
-                    </Grid>
+    <StackPanel Orientation="Vertical">
+        <Border Background="#1b6093"  HorizontalAlignment="Stretch" CornerRadius="4 4 0 0">
+            <Grid Margin="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid VerticalAlignment="Center">
+                    <Border Background="#000000" Opacity="0.3" Height="2"></Border>
+                    <Border Background="#dddddd" Height="2"></Border>
+                    <Border
+                        RenderTransformOrigin="20 0"
+                        BorderBrush="#dddddd" HorizontalAlignment="Left" BorderThickness="2" Width="20" Height="20"
+                        CornerRadius="20" Background="#1b6093">
+                        <Border.RenderTransform>
+                            <TranslateTransform x:Name="Progressbar" X="0" Y="0"></TranslateTransform>
+                        </Border.RenderTransform>
+                    </Border>
+                    <Grid.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Progressbar"
+                                                     Storyboard.TargetProperty="X" Duration="0:0:8" To="195">
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Grid.Triggers>
                 </Grid>
-                <!-- Next -->
-                <Button x:Name="NextButton" Style="{StaticResource TransparentButton}"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center" Margin="13,0,0,0" ToolTip="下一首"
-                        Command="{s:Action NextCommand}">
-                    <TextBlock Text="&#xe672;" FontFamily="{StaticResource MusicIconfont}"
-                               Foreground="{StaticResource MusicFontColor}"
-                               FontSize="32" />
-                </Button>
-                <!-- volume -->
-                <Button x:Name="VolumeButton" Style="{StaticResource TransparentButton}"
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="13,0,0,0"
-                        ToolTip="音量" Command="{s:Action VolumeCommand}">
-                    <TextBlock Text="&#xe831;" FontFamily="{StaticResource MusicIconfont}"
-                               Foreground="{StaticResource MusicFontColor}"
-                               FontSize="32" />
-                </Button>
-                <!-- playlist -->
-                <Button x:Name="PlayListButton" Style="{StaticResource TransparentButton}"
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="13,0,0,0"
-                        ToolTip="播放列表" Command="{s:Action PlayListCommand}">
-                    <TextBlock Text="&#xe669;" FontFamily="{StaticResource MusicIconfont}"
-                               Foreground="{StaticResource MusicFontColor}"
-                               FontSize="32" />
-                </Button>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Previous -->
+                    <Button x:Name="PreviousButton" Style="{StaticResource TransparentButton}"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,13,0"
+                            ToolTip="上一个" Command="{s:Action PreviousCommand}">
+                        <TextBlock Text="&#xe670;" FontFamily="{StaticResource MusicIconfont}"
+                                   Foreground="{StaticResource MusicFontColor}"
+                                   FontSize="32" />
+                    </Button>
+                    <!-- Play and pause -->
+                    <Grid>
+                        <!-- Ring -->
+                        <!-- <ProgressBar Value="40"></ProgressBar> -->
+                        <!-- <dc:ProgressRing Width="20" Height="20" Foreground="{DynamicResource Brush_PrimaryText}" IsActive="True" Visibility="{Binding IsLoadingTrack,Converter={StaticResource BooleanToVisibilityConverter}}"/> -->
+                        <Grid
+                            Visibility="{Binding IsLoadingTrack,Converter={StaticResource InvertingBooleanToVisibilityConverter}}">
+                            <!-- Play -->
+                            <Button x:Name="PlayButton" Style="{StaticResource TransparentButton}"
+                                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="播放"
+                                    Visibility="{Binding ShowPause,Converter={StaticResource InvertingBooleanToVisibilityConverter}}"
+                                    Command="{s:Action PlayCommand}">
+                                <TextBlock Text="&#xe66b;" FontFamily="{StaticResource MusicIconfont}"
+                                           Foreground="{StaticResource MusicFontColor}"
+                                           FontSize="32" />
+                            </Button>
+                            <!-- Pause -->
+                            <Button x:Name="PauseButton" Style="{StaticResource TransparentButton}"
+                                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="暂停"
+                                    Visibility="{Binding ShowPause,Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    Command="{s:Action PauseCommand}">
+                                <TextBlock Text="&#xe66c;" FontFamily="{StaticResource MusicIconfont}"
+                                           Foreground="{StaticResource MusicFontColor}"
+                                           FontSize="32" />
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <!-- Next -->
+                    <Button x:Name="NextButton" Style="{StaticResource TransparentButton}"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" Margin="13,0,0,0" ToolTip="下一首"
+                            Command="{s:Action NextCommand}">
+                        <TextBlock Text="&#xe672;" FontFamily="{StaticResource MusicIconfont}"
+                                   Foreground="{StaticResource MusicFontColor}"
+                                   FontSize="32" />
+                    </Button>
+                    <!-- volume -->
+                    <Button x:Name="VolumeButton" Style="{StaticResource TransparentButton}"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="13,0,0,0"
+                            ToolTip="音量" Command="{s:Action VolumeCommand}">
+                        <TextBlock Text="&#xe831;" FontFamily="{StaticResource MusicIconfont}"
+                                   Foreground="{StaticResource MusicFontColor}"
+                                   FontSize="32" />
+                    </Button>
+                    <!-- playlist -->
+                    <Button x:Name="PlayListButton" Style="{StaticResource TransparentButton}"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="13,0,0,0"
+                            ToolTip="播放列表" Command="{s:Action PlayListCommand}">
+                        <TextBlock Text="&#xe669;" FontFamily="{StaticResource MusicIconfont}"
+                                   Foreground="{StaticResource MusicFontColor}"
+                                   FontSize="32" />
+                    </Button>
 
-            </StackPanel>
-        </Grid>
-    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Border Background="#1c5076" MaxHeight="300" MinHeight="100">
+            <ListBox ItemsSource="{Binding FileNameItems}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.Style>
+                    <Style TargetType="ListBox">
+                        <Setter Property="Template"> 
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBox">  
+                                    <Border>
+                                        <ScrollViewer>  
+                                            <ItemsPresenter/>  
+                                        </ScrollViewer>
+                                    </Border> 
+                                </ControlTemplate> 
+                            </Setter.Value>  
+                        </Setter>  
+                    </Style>    
+                </ListBox.Style>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="6 8">
+                            <Grid VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="80" />
+                                </Grid.ColumnDefinitions>
+                                <Grid >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <WrapPanel Orientation="Horizontal"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                        <TextBlock Text="&#xe66a;" FontFamily="{StaticResource MusicIconfont}"
+                                                   Foreground="#ffffff" Margin="0 2 0 0"
+                                                   FontSize="18"></TextBlock>
+                                        <TextBlock Text="あたらよ~夏霞" Foreground="#ffffff"
+                                                   FontSize="16"></TextBlock>
+                                    </WrapPanel>
+                                    <TextBlock Grid.Row="1" Margin="0 4 0 0" Text="あたらよ~夏霞" Foreground="#cccccc"
+                                               FontSize="16"></TextBlock>
+                                </Grid>
+                                
+                                <Border Grid.Column="1" VerticalAlignment="Center" >
+                                    <TextBlock Margin="12 0"
+                                               Text="&#xe66b;" FontFamily="{StaticResource MusicIconfont}"
+                                               Foreground="{StaticResource MusicFontColor}"
+                                               FontSize="32"></TextBlock>
+                                    
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#00000050"></Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                </Border>
+                                
+                                <TextBlock Grid.Column="2" Text="4:36" Margin="12 0"
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource MusicFontColor}"
+                                           FontSize="16"></TextBlock>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+    </StackPanel>
 
 </UserControl>
