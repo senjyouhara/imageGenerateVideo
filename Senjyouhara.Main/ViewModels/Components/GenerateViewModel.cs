@@ -31,6 +31,8 @@ public class GenerateViewModel: MyScreen
     public string ImageInput { get; set; }
     public string MusicInput { get; set; }
 
+    public MusicViewModel MusicViewModel { get; set; }
+
     public List<FileNameItem> ImageFileList { get; set; } = new();
     public List<FileNameItem> MusicFileList { get; set; } = new();
 
@@ -43,6 +45,7 @@ public class GenerateViewModel: MyScreen
         _eventAggregator = eventAggregator;
         _dialogManager = dialogManager;
         _container = container;
+        MusicViewModel = container.Get<MusicViewModel>();
         // ImageUriList = new List<Uri>()
         // {
         //     new("D:/3c6d55fbb2fb4316cb2fde3620a4462309f7d34e.jpg"),

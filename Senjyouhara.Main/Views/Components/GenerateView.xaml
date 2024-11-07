@@ -180,6 +180,8 @@
                              Text="{Binding MusicInput}" />
                 </DockPanel>
 
+                <local:MusicView s:View.Model="{Binding MusicViewModel}" />
+
 
             </StackPanel>
         </hc:ScrollViewer>

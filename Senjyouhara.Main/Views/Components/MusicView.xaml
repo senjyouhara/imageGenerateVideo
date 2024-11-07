@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="Senjyouhara.Main.Views.Components.MusicView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:converter="clr-namespace:Senjyouhara.Common.Converter;assembly=Senjyouhara.Common">
+
+    <UserControl.Resources>
+        <converter:InvertingBooleanToVisibilityConverter x:Key="InvertingBooleanToVisibilityConverter" />
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+            <!-- Previous -->
+            <Button x:Name="PreviousButton" Style="{StaticResource TransparentButton}"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,13,0"
+                    ToolTip="上一个" Command="{s:Action PreviousCommand}">
+                <TextBlock Text="&#xe7a7;" FontFamily="{StaticResource MusicIconfont}" Foreground="#333333"
+                           FontSize="32" />
+            </Button>
+            <!-- Play and pause -->
+            <Grid>
+                <!-- Ring -->
+                <!-- <ProgressBar Value="40"></ProgressBar> -->
+                <!-- <dc:ProgressRing Width="20" Height="20" Foreground="{DynamicResource Brush_PrimaryText}" IsActive="True" Visibility="{Binding IsLoadingTrack,Converter={StaticResource BooleanToVisibilityConverter}}"/> -->
+                <Grid
+                    Visibility="{Binding IsLoadingTrack,Converter={StaticResource InvertingBooleanToVisibilityConverter}}">
+                    <!-- Play -->
+                    <Button x:Name="PlayButton" Style="{StaticResource TransparentButton}"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="播放"
+                            Visibility="{Binding ShowPause,Converter={StaticResource InvertingBooleanToVisibilityConverter}}"
+                            Command="{s:Action PlayCommand}">
+                        <TextBlock Text="&#xe80f;" FontFamily="{StaticResource MusicIconfont}" Foreground="#333333"
+                                   FontSize="32" />
+                    </Button>
+                    <!-- Pause -->
+                    <Button x:Name="PauseButton" Style="{StaticResource TransparentButton}"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="暂停"
+                            Visibility="{Binding ShowPause,Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Command="{s:Action PauseCommand}">
+                        <TextBlock Text="&#xe716;" FontFamily="{StaticResource MusicIconfont}" Foreground="#333333"
+                                   FontSize="32" />
+                    </Button>
+                </Grid>
+            </Grid>
+            <!-- Next -->
+            <Button x:Name="NextButton" Style="{StaticResource TransparentButton}" HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" Margin="13,0,0,0" ToolTip="下一首" Command="{s:Action NextCommand}">
+                <TextBlock Text="&#xe775;" FontFamily="{StaticResource MusicIconfont}" Foreground="#333333"
+                           FontSize="32" />
+            </Button>
+            <!-- volume -->
+            <Button x:Name="VolumeButton" Style="{StaticResource TransparentButton}"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="13,0,0,0"
+                    ToolTip="音量" Command="{s:Action VolumeCommand}">
+                <TextBlock Text="&#xe845;" FontFamily="{StaticResource MusicIconfont}" Foreground="#333333"
+                           FontSize="32" />
+            </Button>
+            <!-- playlist -->
+            <Button x:Name="PlayListButton" Style="{StaticResource TransparentButton}"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="13,0,0,0"
+                    ToolTip="音量" Command="{s:Action PlayListCommand}">
+                <TextBlock Text="&#xe69c;" FontFamily="{StaticResource MusicIconfont}" Foreground="#333333"
+                           FontSize="32" />
+            </Button>
+
+        </StackPanel>
+
+    </Grid>
+</UserControl>
