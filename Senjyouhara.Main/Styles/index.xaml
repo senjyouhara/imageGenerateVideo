@@ -5,6 +5,7 @@
         /Resources/Fonts/#iconfont
         <!-- pack://application:,,,/Senjyouhara.Main;component/Resources/Fonts/#iconfont -->
     </FontFamily>
+    <Brush x:Key="MusicFontColor">#dddddd</Brush>
 
     <!-- TransparentButton -->
     <Style x:Key="TransparentButton" TargetType="{x:Type Button}">
