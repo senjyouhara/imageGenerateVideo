@@ -22,43 +22,166 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <TextBlock Text="请确保图片分辨率都一致" DockPanel.Dock="Bottom" Margin="0 0 0 12" Style="{StaticResource BaseTitle}"></TextBlock>
-            <DockPanel Margin="0 0 0 12">
-                <Button DockPanel.Dock="Right" Margin="10 0 0 0" Command="{s:Action SelectImageCommand}"
-                        FocusVisualStyle="{x:Null}">
-                    ...
-                </Button>
-                <TextBox Foreground="DimGray"
-                         Adorners:UnableAssists.IsDisabled="True"
-                         hc:InfoElement.Placeholder="请选择图片"
-                         Style="{StaticResource TextBoxExtend}"
-                         IsReadOnly="True"
-                         Text="{Binding ImageInput}">
-                </TextBox>
-            </DockPanel>
-        
-            <DockPanel>
-                <Button DockPanel.Dock="Right" Margin="10 0 0 0" Command="{s:Action SelectMusicCommand}"
-                        FocusVisualStyle="{x:Null}">
-                    ...
-                </Button>
-                <TextBox Foreground="DimGray"
-                         hc:InfoElement.Placeholder="请选择音乐"
-                         Adorners:UnableAssists.IsDisabled="True"
-                         Style="{StaticResource TextBoxExtend}"
-                         IsReadOnly="True"
-                         Text="{Binding MusicInput}">
-                </TextBox>
-            </DockPanel>
-            <!-- <Button Command="{s:Action ImgCommand}">显示图片</Button> -->
-            <!-- <ui:ImageViewer Background="{DynamicResource SecondaryRegionBrush}" -->
-            <!--                 Width="600" Height="330" -->
-            <!--                 ImageSourceList="{Binding ImgList}" -->
-            <!--                 IsShowPrevNext="True" -->
-            <!--                 Uri="{Binding ImgList[0]}" -->
-            <!--                  /> -->
-        </StackPanel>
-        
+        <hc:ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="请确保图片分辨率都一致" DockPanel.Dock="Bottom" Margin="0 0 0 12"
+                           Style="{StaticResource BaseTitle}" />
+                <DockPanel Margin="0 0 0 12">
+                    <Button DockPanel.Dock="Right" Margin="10 0 0 0" Command="{s:Action SelectImageCommand}"
+                            FocusVisualStyle="{x:Null}">
+                        ...
+                    </Button>
+                    <TextBox Foreground="DimGray"
+                             Adorners:UnableAssists.IsDisabled="True"
+                             hc:InfoElement.Placeholder="请选择图片"
+                             Style="{StaticResource TextBoxExtend}"
+                             IsReadOnly="True"
+                             Text="{Binding ImageInput}" />
+                </DockPanel>
+
+                <DockPanel
+                    Visibility="{Binding HasImageList, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource Boolean2VisibilityConverter}}">
+                    <Button Command="{s:Action PrevImgCommand}"
+                            DockPanel.Dock="Left" FocusVisualStyle="{x:Null}">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                <Grid.Style>
+                                                    <Style TargetType="Grid">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Opacity" Value="0.8" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Grid.Style>
+                                                <Canvas Focusable="False" Height="50" Width="50">
+                                                    <Ellipse
+                                                        Width="50"
+                                                        Height="50"
+                                                        Fill="#000000"
+                                                        Opacity="0.6"
+                                                        Canvas.Left="0"
+                                                        Canvas.Top="0" />
+                                                </Canvas>
+                                                <Canvas Focusable="False" Height="50" Width="50" Opacity="0.8">
+                                                    <Path Canvas.Top="-10" Data="M 30,10 L 45, 25 L 30, 40 "
+                                                          Stroke="#ffffff" StrokeThickness="2">
+                                                        <Path.RenderTransform>
+                                                            <RotateTransform CenterX="30" CenterY="30" Angle="180" />
+                                                        </Path.RenderTransform>
+                                                    </Path>
+                                                </Canvas>
+                                                <ContentPresenter HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button
+                        Command="{s:Action NextImgCommand}"
+                        FocusVisualStyle="{x:Null}"
+                        DockPanel.Dock="Right">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                <Grid.Style>
+                                                    <Style TargetType="Grid">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Opacity" Value="0.8" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Grid.Style>
+
+                                                <Canvas Focusable="False" Height="50" Width="50">
+                                                    <Ellipse
+                                                        Width="50"
+                                                        Height="50"
+                                                        Fill="#000000"
+                                                        Opacity="0.6"
+                                                        Canvas.Left="0"
+                                                        Canvas.Top="0" />
+                                                </Canvas>
+                                                <Canvas Focusable="False" Height="50" Width="50" Opacity="0.8">
+                                                    <Path Canvas.Top="0" Canvas.Left="-10"
+                                                          Data="M 30,10 L 45, 25 L 30, 40 " Stroke="#ffffff"
+                                                          StrokeThickness="2" />
+                                                </Canvas>
+                                                <ContentPresenter HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <ListBox x:Name="ImgListBox"
+                             ItemsSource="{Binding ImageFileList}" BorderThickness="0">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,5">
+                                    <Image Source="{Binding Uri }" Width="200" Height="120">
+                                        <Image.InputBindings>
+                                            <MouseBinding MouseAction="LeftDoubleClick"
+                                                          Command="{s:Action ImgListItemPreviewCommand}"
+                                                          CommandParameter="{Binding }" />
+                                        </Image.InputBindings>
+                                    </Image>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+
+                <DockPanel Height="100">
+                    <TextBox Text="请选择图片" BorderThickness="0" Foreground="#999999" FontSize="16"
+                             HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <DockPanel.Style>
+                        <Style TargetType="DockPanel">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasImageList, UpdateSourceTrigger=PropertyChanged}"
+                                             Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DockPanel.Style>
+                </DockPanel>
+
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Margin="10 0 0 0" Command="{s:Action SelectMusicCommand}"
+                            FocusVisualStyle="{x:Null}">
+                        ...
+                    </Button>
+                    <TextBox Foreground="DimGray"
+                             hc:InfoElement.Placeholder="请选择音乐"
+                             Adorners:UnableAssists.IsDisabled="True"
+                             Style="{StaticResource TextBoxExtend}"
+                             IsReadOnly="True"
+                             Text="{Binding MusicInput}" />
+                </DockPanel>
+
+
+            </StackPanel>
+        </hc:ScrollViewer>
     </Grid>
 </UserControl>

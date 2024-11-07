@@ -1,4 +1,5 @@
-﻿using PropertyChanged;
+﻿using System;
+using PropertyChanged;
 using Senjyouhara.Common.Utils;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,8 +17,12 @@ namespace Senjyouhara.Main.Model
         //[RegularExpression(@"^1[3-9]\d{9}$", ErrorMessage = "手机号不正确")]
         public string Uid { get; set; }
         public string OriginFileName { get; set; }
+
+        public string FilePath { get; set; }
         public string FileName { get; set; }
         public string Suffix { get; set; }
+
+        public Uri Uri { get; set; }
 
     }
 }
