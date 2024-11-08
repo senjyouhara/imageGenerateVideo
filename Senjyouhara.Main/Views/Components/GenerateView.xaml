@@ -42,92 +42,21 @@
                 <DockPanel
                     Visibility="{Binding HasImageList, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource Boolean2VisibilityConverter}}">
                     <Button Command="{s:Action PrevImgCommand}"
-                            DockPanel.Dock="Left" FocusVisualStyle="{x:Null}">
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type Button}">
-                                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                <Grid.Style>
-                                                    <Style TargetType="Grid">
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Opacity" Value="0.8" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Grid.Style>
-                                                <Canvas Focusable="False" Height="50" Width="50">
-                                                    <Ellipse
-                                                        Width="50"
-                                                        Height="50"
-                                                        Fill="#000000"
-                                                        Opacity="0.6"
-                                                        Canvas.Left="0"
-                                                        Canvas.Top="0" />
-                                                </Canvas>
-                                                <Canvas Focusable="False" Height="50" Width="50" Opacity="0.8">
-                                                    <Path Canvas.Top="-10" Data="M 30,10 L 45, 25 L 30, 40 "
-                                                          Stroke="#ffffff" StrokeThickness="2">
-                                                        <Path.RenderTransform>
-                                                            <RotateTransform CenterX="30" CenterY="30" Angle="180" />
-                                                        </Path.RenderTransform>
-                                                    </Path>
-                                                </Canvas>
-                                                <ContentPresenter HorizontalAlignment="Center"
-                                                                  VerticalAlignment="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+                            Template="{StaticResource PrevButtonTemplate}"
+                            Width="50"
+                            Height="50"
+                            Tag="50 50 50 50"
+                            DockPanel.Dock="Left"
+                            FocusVisualStyle="{x:Null}" />
 
                     <Button
                         Command="{s:Action NextImgCommand}"
                         FocusVisualStyle="{x:Null}"
-                        DockPanel.Dock="Right">
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type Button}">
-                                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                <Grid.Style>
-                                                    <Style TargetType="Grid">
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Opacity" Value="0.8" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Grid.Style>
-
-                                                <Canvas Focusable="False" Height="50" Width="50">
-                                                    <Ellipse
-                                                        Width="50"
-                                                        Height="50"
-                                                        Fill="#000000"
-                                                        Opacity="0.6"
-                                                        Canvas.Left="0"
-                                                        Canvas.Top="0" />
-                                                </Canvas>
-                                                <Canvas Focusable="False" Height="50" Width="50" Opacity="0.8">
-                                                    <Path Canvas.Top="0" Canvas.Left="-10"
-                                                          Data="M 30,10 L 45, 25 L 30, 40 " Stroke="#ffffff"
-                                                          StrokeThickness="2" />
-                                                </Canvas>
-                                                <ContentPresenter HorizontalAlignment="Center"
-                                                                  VerticalAlignment="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+                        Width="50"
+                        Height="50"
+                        Tag="50 50 50 50"
+                        Template="{StaticResource NextButtonTemplate}"
+                        DockPanel.Dock="Right" />
 
                     <ListBox x:Name="ImgListBox"
                              ItemsSource="{Binding ImageFileList}" BorderThickness="0">
@@ -181,7 +110,7 @@
                 </DockPanel>
 
                 <Border Margin="10 10">
-                    <local:MusicView s:View.Model="{Binding MusicViewModel}" />
+                    <ContentControl s:View.Model="{Binding MusicViewModel}" />
                 </Border>
                 
 

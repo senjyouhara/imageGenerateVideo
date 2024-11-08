@@ -2,6 +2,137 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:Senjyouhara.UI.Controls"
                     xmlns:hc="https://handyorg.github.io/handycontrol">
+
+
+    <ControlTemplate x:Key="PrevButtonTemplate" TargetType="{x:Type Button}">
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Border x:Name="Border" CornerRadius="50" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}"
+                    Background="#80000000">
+                <TextBlock Text="&#xe643;" Margin="0 0 6 3" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           FontSize="36" FontFamily="{DynamicResource Iconfont}" Foreground="#ffffff" />
+            </Border>
+
+            <!-- <ContentPresenter HorizontalAlignment="Center" -->
+            <!--                   VerticalAlignment="Center" /> -->
+        </Grid>
+        <ControlTemplate.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation
+                            Storyboard.TargetName="Border"
+                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                            To="#60000000"
+                            Duration="0:0:0.2">
+                            <ColorAnimation.EasingFunction>
+                                <BackEase EasingMode="EaseInOut" />
+                            </ColorAnimation.EasingFunction>
+                        </ColorAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation
+                            Storyboard.TargetName="Border"
+                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                            To="#80000000"
+                            Duration="0:0:0.2">
+                            <ColorAnimation.EasingFunction>
+                                <BackEase EasingMode="EaseInOut" />
+                            </ColorAnimation.EasingFunction>
+                        </ColorAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeftButtonUp">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation
+                            Storyboard.TargetName="Border"
+                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                            To="#70000000"
+                            Duration="0:0:0.2">
+                            <ColorAnimation.EasingFunction>
+                                <BackEase EasingMode="EaseInOut" />
+                            </ColorAnimation.EasingFunction>
+                        </ColorAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <!-- <Trigger Property="IsMouseOver" Value="True"> -->
+            <!--     <Setter TargetName="Border" Property="Background" Value="#60000000" /> -->
+            <!-- </Trigger> -->
+            <!-- <Trigger Property="IsPressed" Value="True"> -->
+            <!--     <Setter TargetName="Border" Property="Background" Value="#70000000" /> -->
+            <!-- </Trigger> -->
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="NextButtonTemplate" TargetType="{x:Type Button}">
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Border x:Name="Border" CornerRadius="50" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}"
+                    Background="#80000000">
+                <TextBlock Text="&#xe641;" Margin="5 0 0 3" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           FontSize="36" FontFamily="{DynamicResource Iconfont}" Foreground="#ffffff" />
+            </Border>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation
+                            Storyboard.TargetName="Border"
+                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                            To="#60000000"
+                            Duration="0:0:0.2">
+                            <ColorAnimation.EasingFunction>
+                                <BackEase EasingMode="EaseInOut" />
+                            </ColorAnimation.EasingFunction>
+                        </ColorAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation
+                            Storyboard.TargetName="Border"
+                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                            To="#80000000"
+                            Duration="0:0:0.2">
+                            <ColorAnimation.EasingFunction>
+                                <BackEase EasingMode="EaseInOut" />
+                            </ColorAnimation.EasingFunction>
+                        </ColorAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeftButtonUp">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation
+                            Storyboard.TargetName="Border"
+                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                            To="#70000000"
+                            Duration="0:0:0.2">
+                            <ColorAnimation.EasingFunction>
+                                <BackEase EasingMode="EaseInOut" />
+                            </ColorAnimation.EasingFunction>
+                        </ColorAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <!-- <Trigger Property="IsMouseOver" Value="True"> -->
+            <!--     <Setter TargetName="Border" Property="Background" Value="#60000000" /> -->
+            <!-- </Trigger> -->
+            <!-- <Trigger Property="IsPressed" Value="True"> -->
+            <!--     <Setter TargetName="Border" Property="Background" Value="#70000000" /> -->
+            <!-- </Trigger> -->
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
     <Style TargetType="{x:Type controls:ImageViewer}">
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Background" Value="Transparent" />
@@ -56,72 +187,21 @@
                                     <Button
                                         IsEnabled="{TemplateBinding HasPrevUri}"
                                         FocusVisualStyle="{x:Null}"
-                                        x:Name="PrevButton">
-                                        <Button.Style>
-                                            <Style TargetType="{x:Type Button}">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="{x:Type Button}">
-                                                            <ContentPresenter HorizontalAlignment="Center"
-                                                                              VerticalAlignment="Center" />
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Canvas Focusable="False" Height="50" Width="50" Opacity="0.6">
-                                                <Ellipse
-                                                    Width="50"
-                                                    Height="50"
-                                                    Fill="#000000"
-                                                    Canvas.Left="0"
-                                                    Canvas.Top="0" />
-                                            </Canvas>
-                                            <Canvas Focusable="False" Height="50" Width="50" Opacity="0.8">
-                                                <Path Canvas.Top="-10" Data="M 30,10 L 45, 25 L 30, 40 "
-                                                      Stroke="#ffffff" StrokeThickness="2">
-                                                    <Path.RenderTransform>
-                                                        <RotateTransform CenterX="30" CenterY="30" Angle="180" />
-                                                    </Path.RenderTransform>
-                                                </Path>
-                                            </Canvas>
-                                        </Grid>
-                                    </Button>
+                                        x:Name="PrevButton"
+                                        Width="50"
+                                        Height="50"
+                                        Tag="50 50 50 50"
+                                        Template="{StaticResource PrevButtonTemplate}" />
                                 </Border>
                                 <Border DockPanel.Dock="Right" Height="60"
                                         x:Name="Next">
                                     <Button FocusVisualStyle="{x:Null}"
                                             IsEnabled="{TemplateBinding HasNextUri}"
-                                            x:Name="NextButton">
-                                        <Button.Style>
-                                            <Style TargetType="{x:Type Button}">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="{x:Type Button}">
-                                                            <ContentPresenter HorizontalAlignment="Center"
-                                                                              VerticalAlignment="Center" />
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Canvas Focusable="False" Height="50" Width="50" Opacity="0.6">
-                                                <Ellipse
-                                                    Width="50"
-                                                    Height="50"
-                                                    Fill="#000000"
-                                                    Canvas.Left="0"
-                                                    Canvas.Top="0" />
-                                            </Canvas>
-                                            <Canvas Focusable="False" Height="50" Width="50" Opacity="0.8">
-                                                <Path Canvas.Top="0" Canvas.Left="-10"
-                                                      Data="M 30,10 L 45, 25 L 30, 40 " Stroke="#ffffff"
-                                                      StrokeThickness="2" />
-                                            </Canvas>
-                                        </Grid>
-                                    </Button>
+                                            x:Name="NextButton"
+                                            Width="50"
+                                            Height="50"
+                                            Tag="50 50 50 50"
+                                            Template="{StaticResource NextButtonTemplate}" />
                                 </Border>
                                 <Control />
                             </DockPanel>

@@ -43,6 +43,15 @@
                                 <TextBlock
                                     Text="{Binding ImgSize,ElementName=PART_ImageViewer,Converter={StaticResource Long2FileSizeConverter}}"
                                     Foreground="White" Margin="30,0,0,0" />
+                                <TextBlock
+                                    Text="{Binding ImageWidth,ElementName=PART_ImageViewer}"
+                                    Foreground="White" Margin="30,0,0,0" />
+                                <TextBlock
+                                    Text=" x "
+                                    Foreground="White" />
+                                <TextBlock
+                                    Text="{Binding ImageHeight,ElementName=PART_ImageViewer}"
+                                    Foreground="White" Margin="0,0,0,0" />
                             </StackPanel>
                             <Button Command="hc:ControlCommands.Close" Foreground="{DynamicResource TextIconBrush}"
                                     WindowChrome.IsHitTestVisibleInChrome="True" Background="Red" Padding="14"

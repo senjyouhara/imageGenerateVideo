@@ -6,12 +6,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     d:DesignWidth="800"
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <Brush x:Key="MusicFontColor">#dddddd</Brush>
         <converter:InvertingBooleanToVisibilityConverter x:Key="InvertingBooleanToVisibilityConverter" />
         <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="TextTrigger" TargetType="TextBlock">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#FFFFFF" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
 
     <StackPanel Orientation="Vertical">
@@ -69,11 +80,12 @@
                         VerticalContentAlignment="Center"
                         Command="{s:Action PreviousCommand}"
                         Style="{StaticResource TransparentButton}"
+                        Foreground="{StaticResource MusicFontColor}"
                         ToolTip="上一个">
                         <TextBlock
-                            FontFamily="{StaticResource MusicIconfont}"
+                            FontFamily="{StaticResource Iconfont}"
                             FontSize="32"
-                            Foreground="{StaticResource MusicFontColor}"
+                            Style="{StaticResource TextTrigger}"
                             Text="&#xe670;" />
                     </Button>
                     <!--  Play and pause  -->
@@ -81,7 +93,8 @@
                         <!--  Ring  -->
                         <!-- <ProgressBar Value="40"></ProgressBar> -->
                         <!-- <dc:ProgressRing Width="20" Height="20" Foreground="{DynamicResource Brush_PrimaryText}" IsActive="True" Visibility="{Binding IsLoadingTrack,Converter={StaticResource BooleanToVisibilityConverter}}"/> -->
-                        <Grid Visibility="{Binding IsLoadingTrack, Converter={StaticResource InvertingBooleanToVisibilityConverter}}">
+                        <Grid
+                            Visibility="{Binding IsLoadingTrack, Converter={StaticResource InvertingBooleanToVisibilityConverter}}">
                             <!--  Play  -->
                             <Button
                                 x:Name="PlayButton"
@@ -90,11 +103,12 @@
                                 Command="{s:Action PlayCommand}"
                                 Style="{StaticResource TransparentButton}"
                                 ToolTip="播放"
+                                Foreground="{StaticResource MusicFontColor}"
                                 Visibility="{Binding ShowPause, Converter={StaticResource InvertingBooleanToVisibilityConverter}}">
                                 <TextBlock
-                                    FontFamily="{StaticResource MusicIconfont}"
+                                    FontFamily="{StaticResource Iconfont}"
                                     FontSize="32"
-                                    Foreground="{StaticResource MusicFontColor}"
+                                    Style="{StaticResource TextTrigger}"
                                     Text="&#xe66b;" />
                             </Button>
                             <!--  Pause  -->
@@ -105,11 +119,12 @@
                                 Command="{s:Action PauseCommand}"
                                 Style="{StaticResource TransparentButton}"
                                 ToolTip="暂停"
+                                Foreground="{StaticResource MusicFontColor}"
                                 Visibility="{Binding ShowPause, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <TextBlock
-                                    FontFamily="{StaticResource MusicIconfont}"
+                                    FontFamily="{StaticResource Iconfont}"
                                     FontSize="32"
-                                    Foreground="{StaticResource MusicFontColor}"
+                                    Style="{StaticResource TextTrigger}"
                                     Text="&#xe66c;" />
                             </Button>
                         </Grid>
@@ -122,11 +137,12 @@
                         VerticalContentAlignment="Center"
                         Command="{s:Action NextCommand}"
                         Style="{StaticResource TransparentButton}"
+                        Foreground="{StaticResource MusicFontColor}"
                         ToolTip="下一首">
                         <TextBlock
-                            FontFamily="{StaticResource MusicIconfont}"
+                            FontFamily="{StaticResource Iconfont}"
                             FontSize="32"
-                            Foreground="{StaticResource MusicFontColor}"
+                            Style="{StaticResource TextTrigger}"
                             Text="&#xe672;" />
                     </Button>
                     <!--  volume  -->
@@ -137,12 +153,20 @@
                         VerticalContentAlignment="Center"
                         Command="{s:Action VolumeCommand}"
                         Style="{StaticResource TransparentButton}"
+                        Foreground="{StaticResource MusicFontColor}"
                         ToolTip="音量">
                         <TextBlock
-                            FontFamily="{StaticResource MusicIconfont}"
+                            FontFamily="{StaticResource Iconfont}"
                             FontSize="32"
-                            Foreground="{StaticResource MusicFontColor}"
+                            Style="{StaticResource TextTrigger}"
                             Text="&#xe831;" />
+                        <hc:Poptip.Instance>
+                            <hc:Poptip PlacementType="Top">
+                                <hc:Poptip.Content>
+                                    123
+                                </hc:Poptip.Content>
+                            </hc:Poptip>
+                        </hc:Poptip.Instance>
                     </Button>
                     <!--  playlist  -->
                     <Button
@@ -152,11 +176,12 @@
                         VerticalContentAlignment="Center"
                         Command="{s:Action PlayListCommand}"
                         Style="{StaticResource TransparentButton}"
+                        Foreground="{StaticResource MusicFontColor}"
                         ToolTip="播放列表">
                         <TextBlock
-                            FontFamily="{StaticResource MusicIconfont}"
+                            FontFamily="{StaticResource Iconfont}"
                             FontSize="32"
-                            Foreground="{StaticResource MusicFontColor}"
+                            Style="{StaticResource TextTrigger}"
                             Text="&#xe669;" />
                     </Button>
 
@@ -227,7 +252,8 @@
                                             <MultiTrigger.Conditions>
                                                 <Condition Property="IsMouseOver" Value="True" />
                                             </MultiTrigger.Conditions>
-                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource Item.MouseOver.Background}" />
+                                            <Setter TargetName="Bd" Property="Background"
+                                                    Value="{StaticResource Item.MouseOver.Background}" />
                                             <!-- <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.MouseOver.Border}"/> -->
 
                                         </MultiTrigger>
@@ -236,7 +262,8 @@
                                                 <Condition Property="Selector.IsSelectionActive" Value="False" />
                                                 <Condition Property="IsSelected" Value="True" />
                                             </MultiTrigger.Conditions>
-                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource Item.SelectedInactive.Background}" />
+                                            <Setter TargetName="Bd" Property="Background"
+                                                    Value="{StaticResource Item.SelectedInactive.Background}" />
                                             <!-- <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedInactive.Border}"/> -->
                                         </MultiTrigger>
                                         <MultiTrigger>
@@ -244,11 +271,13 @@
                                                 <Condition Property="Selector.IsSelectionActive" Value="True" />
                                                 <Condition Property="IsSelected" Value="True" />
                                             </MultiTrigger.Conditions>
-                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource Item.SelectedActive.Background}" />
+                                            <Setter TargetName="Bd" Property="Background"
+                                                    Value="{StaticResource Item.SelectedActive.Background}" />
                                             <!-- <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedActive.Border}"/> -->
                                         </MultiTrigger>
                                         <Trigger Property="IsEnabled" Value="False">
-                                            <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                            <Setter TargetName="Bd" Property="TextElement.Foreground"
+                                                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
                                         </Trigger>
                                     </ControlTemplate.Triggers>
 
@@ -295,7 +324,7 @@
                                         <TextBlock
                                             x:Name="t1"
                                             Margin="0,2,0,0"
-                                            FontFamily="{StaticResource MusicIconfont}"
+                                            FontFamily="{StaticResource Iconfont}"
                                             FontSize="18"
                                             Foreground="#ffffff"
                                             Text="&#xe66a;" />
@@ -316,7 +345,7 @@
                                     <TextBlock
                                         x:Name="t3"
                                         Margin="12,0"
-                                        FontFamily="{StaticResource MusicIconfont}"
+                                        FontFamily="{StaticResource Iconfont}"
                                         FontSize="32"
                                         Foreground="{StaticResource MusicFontColor}"
                                         Text="&#xe66b;" />
