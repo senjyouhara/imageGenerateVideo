@@ -170,6 +170,7 @@
             Background="#1c5076">
             <ListBox
                 d:ItemsSource="{d:SampleData ItemCount=5}"
+                BorderThickness="0"
                 ItemsSource="{Binding FileNameItems}"
                 ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ListBox.Style>
@@ -189,7 +190,7 @@
                 </ListBox.Style>
                 
                 <ListBox.Resources>
-                    <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#000000" Opacity="0.7"/>
+                    <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#000000" Opacity="0.5"/>
                     <SolidColorBrush x:Key="Item.MouseOver.Border" Color="#3DDADADA"/>
                     <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="Transparent"/>
                     <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#3DDADADA"/>
@@ -201,6 +202,7 @@
                         <Setter Property="BorderBrush" Value="Transparent"/>
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Padding" Value="0"/>
                         <Setter Property="BorderThickness" Value="0"/>
                         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                         <Setter Property="Template">
@@ -212,8 +214,7 @@
                                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                           SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                          TextBlock.Foreground="{TemplateBinding Foreground}"
-                                                          />
+                                        />
                                     </Border>
                 
                                     <ControlTemplate.Triggers>
@@ -338,7 +339,7 @@
                             </Grid>
                         </Border>
                         <DataTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger Property="ListBoxItem.IsMouseOver" Value="True">
                                 <Setter Property="TextElement.Foreground" Value="#ffffff" TargetName="t1"></Setter>
                                 <Setter Property="TextElement.Foreground" Value="#ffffff" TargetName="t2"></Setter>
                                 <Setter Property="TextElement.Foreground" Value="#ffffff" TargetName="t3"></Setter>
