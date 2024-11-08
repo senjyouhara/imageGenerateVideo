@@ -10,21 +10,27 @@ namespace Senjyouhara.Main.ViewModels.Components;
 public class MusicViewModel : MyScreen
 {
 
-    public ObservableCollection<FileNameItem> FileNameItems { get; set; } = new()
-    {
-        new FileNameItem()
-        {
-            Uid = Guid.NewGuid().ToString(),
-            OriginFileName = "あたらよ-夏霞",
-            FileName = "あたらよ-夏霞",
-            FilePath = "E:\\KwDownload\\song\\あたらよ-夏霞.flac",
-            Suffix = "flac",
-            Uri = new Uri("E:\\KwDownload\\song\\あたらよ-夏霞.flac")
-        }
-    };
+    public ObservableCollection<FileNameItem> FileNameItems { get; set; }
     
     public bool IsLoadingTrack { get; set; }
     public bool ShowPause { get; set; }
+
+
+    public MusicViewModel()
+    {
+        FileNameItems = new()
+        {
+            new FileNameItem()
+            {
+                Uid = Guid.NewGuid().ToString(),
+                OriginFileName = "あたらよ-夏霞",
+                FileName = "あたらよ-夏霞",
+                FilePath = "E:\\KwDownload\\song\\あたらよ-夏霞.flac",
+                Suffix = "flac",
+                Uri = new Uri("E:\\KwDownload\\song\\あたらよ-夏霞.flac")
+            }
+        };
+    }
 
 
     public void PreviousCommand()
