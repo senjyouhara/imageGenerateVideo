@@ -497,14 +497,14 @@
                                         <TextBlock
                                             FontSize="16"
                                             Foreground="#ffffff"
-                                            Text="あたらよ~夏霞" />
+                                            Text="{Binding FileName}" />
                                     </StackPanel>
-                                    <TextBlock
-                                        x:Name="t2"
-                                        Margin="0,4,0,0"
-                                        FontSize="16"
-                                        Foreground="#cccccc"
-                                        Text="あたらよ~夏霞" />
+                                    <!-- <TextBlock -->
+                                    <!--     x:Name="t2" -->
+                                    <!--     Margin="0,4,0,0" -->
+                                    <!--     FontSize="16" -->
+                                    <!--     Foreground="#cccccc" -->
+                                    <!--     Text="あたらよ~夏霞" /> -->
                                 </UniformGrid>
             
                                 <Border Grid.Column="1" VerticalAlignment="Stretch">
@@ -524,9 +524,6 @@
                                         Foreground="{StaticResource MusicFontColor}"
                                         Opacity="0"
                                         Text="&#xe66b;" >
-                                        <TextBlock.Triggers>
-            
-                                        </TextBlock.Triggers>
                                     </TextBlock>
                                     <Border.Style>
                                         <Style TargetType="Border">
@@ -546,7 +543,7 @@
                                     VerticalAlignment="Center"
                                     FontSize="16"
                                     Foreground="{StaticResource MusicFontColor}"
-                                    Text="4:36"
+                                    Text="{Binding TimeStr}"
                                     TextAlignment="Right" />
                             </Grid>
                         </Border>

@@ -8,12 +8,15 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using PropertyChanged;
+using Senjyouhara.Common.Utils;
 using Senjyouhara.Main.Core.Manager.Dialog;
 using Senjyouhara.Main.Model;
 using Senjyouhara.Main.Views.Components;
 using Senjyouhara.UI.Controls;
 using Stylet;
 using StyletIoC;
+using TagLib.Riff;
+using File = System.IO.File;
 
 namespace Senjyouhara.Main.ViewModels.Components;
 
@@ -34,7 +37,7 @@ public class GenerateViewModel: MyScreen
     public MusicViewModel MusicViewModel { get; set; }
 
     public List<FileNameItem> ImageFileList { get; set; } = new();
-    public List<FileNameItem> MusicFileList { get; set; } = new();
+    public List<AudioFileItem> MusicFileList { get; set; } = new();
 
     public bool HasImageList => ImageFileList.Count > 0;
 
@@ -56,6 +59,11 @@ public class GenerateViewModel: MyScreen
         //     new ("pack://application:,,,/Resources/78087664f88cf7571.jpg"),
         //     new ("pack://application:,,,/Resources/loading.png"),
         // };
+    }
+
+    protected override void OnInitialActivate()
+    {
+        base.OnInitialActivate();
     }
 
     private List<FileNameItem> GetFileNameItems(List<string> files)
@@ -122,8 +130,26 @@ public class GenerateViewModel: MyScreen
             var fileList = new List<string>(openFileDialog.FileNames)
                 .Where(item => MusicFileList.FirstOrDefault(v => v.FilePath.Equals(item)) == null).ToList();
             var list = GetFileNameItems(fileList);
-            MusicFileList.AddRange(list);
-            MusicFileList = new List<FileNameItem>(MusicFileList);
+            var newList = list.Select(iteem =>
+            {
+                var tmp = new AudioFileItem();
+                ObjectCopy.Copy(iteem, tmp);
+                
+                using (TagLib.File file = TagLib.File.Create(tmp.FilePath))
+                {
+                    // 获取专辑信息
+                    tmp.Album = file.Tag.Album;
+                    tmp.Art = string.Join("、",file.Tag.AlbumArtists);
+                    tmp.Title = file.Tag.Title;
+                    tmp.Time = file.Properties.Duration;
+                }
+                
+                return tmp;
+
+            });
+            MusicFileList.AddRange(newList);
+            MusicFileList = new List<AudioFileItem>(MusicFileList);
+            _eventAggregator.Publish(MusicFileList, "music");
         }
     }
 

@@ -22,9 +22,10 @@ using StyletIoC;
 namespace Senjyouhara.Main.ViewModels.Components;
 
 [AddINotifyPropertyChangedInterface]
-public class MusicViewModel : MyScreen
+public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameItem>>
 {
     private readonly IContainer _container;
+    private readonly IEventAggregator _eventAggregator;
 
     public ObservableCollection<FileNameItem> FileNameItems { get; set; }
     
@@ -38,19 +39,21 @@ public class MusicViewModel : MyScreen
 
     public DelegateCommand<FileNameItem> StartCommand => new (StartHandler);
 
-    public MusicViewModel(IContainer container)
+    public MusicViewModel(IContainer container, IEventAggregator eventAggregator)
     {
         _container = container;
+        _eventAggregator = eventAggregator;
+
         FileNameItems = new()
         {
-            new FileNameItem()
+            new AudioFileItem()
             {
                 Uid = Guid.NewGuid().ToString(),
                 OriginFileName = "あたらよ-夏霞",
                 FileName = "あたらよ-夏霞",
-                FilePath = "E:\\KwDownload\\song\\ヘクとパスカル - fish in the pool  花屋敷.flac",
+                FilePath = "E:\\KwDownload\\song\\Sixx A.M.-This Is Gonna Hurt.flac",
                 Suffix = "flac",
-                Uri = new Uri("E:\\KwDownload\\song\\YOASOBI-たぶん.flac")
+                Uri = new Uri("E:\\KwDownload\\song\\YOASOBI-たぶん.flac"),
             },
             new FileNameItem()
             {
@@ -89,13 +92,31 @@ public class MusicViewModel : MyScreen
                 Uri = new Uri("E:\\KwDownload\\song\\YOASOBI-たぶん.flac")
             },
         };
+        _eventAggregator.Subscribe(this, "music");
+        var shellViewModel = _container.Get<ShellViewModel>();
+        shellViewModel.View.MouseUp += BarMouseUp;
+        shellViewModel.View.MouseMove += BarMouseOver;
+    }
+
+    public void Deconstruct()
+    {
+        _eventAggregator.Unsubscribe(this, "music");
+
     }
 
     protected override void OnInitialActivate()
     {
         base.OnInitialActivate();
-        var shellViewModel = _container.Get<ShellViewModel>();
-        shellViewModel.View.MouseUp += BarMouseUp;
+    }
+
+    protected override void OnActivate()
+    {
+        base.OnActivate();
+    }
+
+    protected override void OnDeactivate()
+    {
+        base.OnDeactivate();
     }
 
     private void AudioDispose()
@@ -233,25 +254,7 @@ public class MusicViewModel : MyScreen
             {
                 if (e.LeftButton != MouseButtonState.Pressed)
                 {
-                    wo?.Pause();
-                    var position = e.GetPosition(view.ProgressLine);
-                    var width = view.ProgressLine.ActualWidth;
-                
-                    var positionX = position.X;    
-                    if (positionX < 0)
-                    {
-                        positionX = 0;
-                    }
-                    if (positionX > width)
-                    {
-                        positionX = width;
-                    }
-                
-                    var percentageX = Math.Round(positionX / width, 8);
-                    mr?.Seek( Convert.ToInt64(mr.Length * percentageX), SeekOrigin.Begin);
-                    wo?.Init(mr);
-                    wo?.Play();
-                    startX = 0.0;
+                    BarMouseUp_Handler(e);
                 }
                 else
                 {
@@ -281,7 +284,8 @@ public class MusicViewModel : MyScreen
             
         }
     }
-    public void BarMouseUp(object sender,  MouseButtonEventArgs e)
+
+    private void BarMouseUp_Handler(MouseEventArgs e)
     {
         if (View is MusicView view)
         {
@@ -290,8 +294,8 @@ public class MusicViewModel : MyScreen
                 wo?.Pause();
                 var position = e.GetPosition(view.ProgressLine);
                 var width = view.ProgressLine.ActualWidth;
-                
                 var positionX = position.X;    
+                
                 if (positionX < 0)
                 {
                     positionX = 0;
@@ -302,12 +306,18 @@ public class MusicViewModel : MyScreen
                 }
                 
                 var percentageX = Math.Round(positionX / width, 8);
+                Log.Info($"width3: {width}, positionX : {positionX}, percentageX: {percentageX} , second: {mr.TotalTime.TotalSeconds}");
                 mr?.Seek( Convert.ToInt64(mr.Length * percentageX), SeekOrigin.Begin);
                 wo?.Init(mr);
                 wo?.Play();
             }
         }
         startX = 0.0;
+    }
+    
+    public void BarMouseUp(object sender,  MouseButtonEventArgs e)
+    {
+        BarMouseUp_Handler(e);
     }
     
     public void PlayCommand()
@@ -344,5 +354,10 @@ public class MusicViewModel : MyScreen
 
     public void PlayListCommand()
     {
+    }
+
+    public void Handle(ObservableCollection<FileNameItem> message)
+    {
+        FileNameItems = message;
     }
 }
