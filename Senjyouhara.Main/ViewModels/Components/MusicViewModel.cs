@@ -373,6 +373,11 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
         ShowPlaylist = !ShowPlaylist;
     }
 
+    public void FileNameSelectedChange(object sender, SelectionChangedEventArgs e)
+    {
+        StartHandler(SelectedItem);
+    }
+    
     public void Handle(ObservableCollection<AudioFileItem> message)
     {
         FileNameItems = message;

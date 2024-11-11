@@ -426,6 +426,7 @@
                 BorderThickness="0"
                 ItemsSource="{Binding FileNameItems}"
                 SelectedItem="{Binding SelectedItem}"
+                SelectionChanged="{s:Action FileNameSelectedChange}"
                 SelectionMode="Single"
                 ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ListBox.Style>
