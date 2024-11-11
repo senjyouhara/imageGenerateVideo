@@ -60,16 +60,6 @@ public class GenerateViewModel: MyScreen
         _dialogManager = dialogManager;
         _container = container;
         OutputResolution = (int)OutputResolutionList[1].Value;
-        // ImageUriList = new List<Uri>()
-        // {
-        //     new("D:/3c6d55fbb2fb4316cb2fde3620a4462309f7d34e.jpg"),
-        //     new("D:/3c6d55fbb2fb4316cb2fde3620a4462309f7d34e.jpg"),
-        //     new("D:/document/图片/2252022177c3df144.jpg"),
-        //     new("D:/3c6d55fbb2fb4316cb2fde3620a4462309f7d34e.jpg"),
-        //     new ("pack://application:,,,/Resources/78087664f88cf7571.jpg"),
-        //     new ("pack://application:,,,/Resources/78087664f88cf7571.jpg"),
-        //     new ("pack://application:,,,/Resources/loading.png"),
-        // };
     }
 
     protected override void OnInitialActivate()
@@ -151,8 +141,11 @@ public class GenerateViewModel: MyScreen
                 {
                     // 获取专辑信息
                     tmp.Album = file.Tag.Album;
-                    tmp.Art = string.Join("、",file.Tag.AlbumArtists);
                     tmp.Title = file.Tag.Title;
+                    if (string.IsNullOrWhiteSpace(tmp.Title))
+                        tmp.Title = tmp.FileName;
+                    else
+                        tmp.Title += " - " + string.Join("、", file.Tag.AlbumArtists);
                     tmp.Time = file.Properties.Duration;
                 }
                 

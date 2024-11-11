@@ -421,14 +421,14 @@
                                                         x:Name="Name"
                                                         FontSize="16"
                                                         Foreground="#ffffff"
-                                                        Text="{Binding FileName}" />
+                                                        Text="{Binding Title}" />
                                                 </StackPanel>
-                                                <!-- <TextBlock -->
-                                                <!--     x:Name="t2" -->
-                                                <!--     Margin="0,4,0,0" -->
-                                                <!--     FontSize="16" -->
-                                                <!--     Foreground="#cccccc" -->
-                                                <!--     Text="あたらよ~夏霞" /> -->
+                                                <TextBlock
+                                                    x:Name="t2"
+                                                    Margin="0,4,0,0"
+                                                    FontSize="16"
+                                                    Foreground="#cccccc"
+                                                    Text="{Binding Album}" />
                                             </UniformGrid>
 
                                             <Border Grid.Column="1" VerticalAlignment="Stretch">
