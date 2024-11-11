@@ -485,13 +485,13 @@
                                                     Text="{Binding Album}" />
                                             </UniformGrid>
 
-                                            <Border Grid.Column="1" VerticalAlignment="Stretch">
-                                                <Border.InputBindings>
-                                                    <MouseBinding
-                                                        MouseAction="LeftClick"
-                                                        Command="{Binding DataContext.StartCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
-                                                        CommandParameter="{Binding }" />
-                                                </Border.InputBindings>
+                                            <Border Grid.Column="1" VerticalAlignment="Stretch" MouseUp="{s:Action ListItemPlayMouseDown}">
+                                                <!-- <Border.InputBindings> -->
+                                                <!--     <MouseBinding -->
+                                                <!--         MouseAction="LeftClick" -->
+                                                <!--         Command="{Binding StartCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}" -->
+                                                <!--         CommandParameter="{Binding }" /> -->
+                                                <!-- </Border.InputBindings> -->
                                                 <TextBlock
                                                     x:Name="t3"
                                                     Margin="12,0"

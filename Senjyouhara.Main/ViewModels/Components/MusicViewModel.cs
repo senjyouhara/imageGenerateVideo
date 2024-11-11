@@ -52,7 +52,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
     private Timer timer;
 
 
-    public DelegateCommand<AudioFileItem> StartCommand => new (StartHandler);
+    public DelegateCommand<AudioFileItem> StartCommand => new(StartHandler);
 
     public MusicViewModel(IContainer container, IEventAggregator eventAggregator)
     {
@@ -65,7 +65,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
         base.OnViewLoaded();
         _eventAggregator.Subscribe(this, "music");
       
-        Thread.Sleep(1000);
+        Thread.Sleep(200);
         var shellViewModel = _container.Get<MainViewModel>();
         // var shellView = _container.Get<MainView>();
         // shellView.MouseUp += BarMouseUp;
@@ -83,7 +83,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
     {
         // // 创建一个定时器，每500毫秒检查一次播放进度
         timer?.Stop();
-        timer = new (1000);
+        timer = new (200);
         timer.Elapsed += (s, e) =>
         {
             if (LoadedTime.TotalSeconds >= SelectedItem.Time.TotalSeconds)
@@ -134,22 +134,28 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
             }
     }
 
+    private void PlaybackStopped(object sender, StoppedEventArgs args)
+    {
+        NextCommand();
+        // AudioDispose();
+    }
+    
     public void StartHandler(AudioFileItem item)
     {
         AudioDispose();
         ShowPause = true;
+        if (wo != null)
+        {
+            wo.PlaybackStopped -= PlaybackStopped;
+        }
         mr = new(item.FilePath);
         wo = new();
         wo.DeviceNumber = 0;
         wo.Init(mr);
         SelectedItem = item;
         LoadedTime = TimeSpan.Zero;
-        
-        wo.PlaybackStopped += (sender, args) =>
-        {
-            NextCommand();
-            // AudioDispose();
-        };
+
+        wo.PlaybackStopped += PlaybackStopped;
         if (View is MusicView view)
         {
                 double progress = (double)mr.Position / mr.Length * 100;
@@ -214,6 +220,8 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
                 var second = TimeSpan.FromSeconds(mr.TotalTime.TotalSeconds * percentageX);
                 storyboard?.Seek(second);
                 storyboard2?.Seek(second);
+                storyboard?.Resume();
+                storyboard2?.Resume();
                 LoadedTime = second;
                 Timer_Handler();
                 mr?.Seek( Convert.ToInt64(mr.Length * percentageX), SeekOrigin.Begin);
@@ -295,6 +303,8 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
                 var second = TimeSpan.FromSeconds(mr.TotalTime.TotalSeconds * percentageX);
                 Log.Info($"width3: {width}, positionX : {positionX}, percentageX: {percentageX} , second: {mr.TotalTime.TotalSeconds}");
                 mr?.Seek( Convert.ToInt64(mr.Length * percentageX), SeekOrigin.Begin);
+                storyboard?.Resume();
+                storyboard2?.Resume();
                 LoadedTime = second;
                 Timer_Handler();
                 // wo?.Init(mr);
@@ -376,7 +386,13 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
 
     public void FileNameSelectedChange(object sender, SelectionChangedEventArgs e)
     {
+        e.Handled = true;
         StartHandler(SelectedItem);
+    }
+    public void ListItemPlayMouseDown(object sender,  MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        // StartHandler(SelectedItem);
     }
     
     public void Handle(ObservableCollection<AudioFileItem> message)
