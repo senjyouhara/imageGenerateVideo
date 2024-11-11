@@ -30,14 +30,36 @@
         <Border
             MouseMove="{s:Action BarMouseOver}"
             HorizontalAlignment="Stretch"
-            Background="#1b6093"
-            CornerRadius="4 4 0 0">
+            Background="#1b6093">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ShowPlaylist}"  Value="True">
+                            <Setter Property="Border.CornerRadius" Value="4 4 0 0"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ShowPlaylist}"  Value="False">
+                            <Setter Property="Border.CornerRadius" Value="4"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Grid Margin="12">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid VerticalAlignment="Center" x:Name="ProgressGrid">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="60" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        FontSize="16"
+                        Foreground="#cccccc"
+                        Text="{Binding LoadedTimeStr}" Margin="0 0 10 0"></TextBlock>
+                    <Grid Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="ProgressGrid">
                     <Border AllowDrop="True" Background="Transparent" Height="9"
                             MouseUp="{s:Action SeekTimeLineCommand}" />
                     <Border x:Name="ProgressLine"
@@ -96,10 +118,16 @@
                     <!--     </EventTrigger> -->
                     <!-- </Grid.Triggers> -->
                 </Grid>
-                <StackPanel
+                    <TextBlock Grid.Column="2"
+                               TextAlignment="Left"
+                        FontSize="16"
+                        Foreground="#cccccc"
+                        Text="{Binding SelectedItem.TimeStr}" Margin="10 0 00 0"></TextBlock>
+                </Grid>
+                <UniformGrid
                     Grid.Row="1"
                     VerticalAlignment="Center"
-                    Orientation="Horizontal">
+                    Columns="5">
                     <!--  Previous  -->
                     <Button
                         x:Name="PreviousButton"
@@ -182,32 +210,44 @@
                         Command="{s:Action VolumeCommand}"
                         Style="{StaticResource TransparentToggleButton}"
                         Foreground="{StaticResource MusicFontColor}"
-                        ToolTip="音量">
+                        Click="{s:Action VolumeClick}"
+                        >
                         <StackPanel>
                             <TextBlock
                                 FontFamily="{StaticResource Iconfont}"
                                 FontSize="32"
                                 Style="{StaticResource TextTrigger}"
+                                ToolTip="音量"
                                 Text="&#xe831;" />
                             <Popup Placement="Top" HorizontalOffset="-30"
-                                   IsOpen="{Binding IsChecked,Mode=OneWay , RelativeSource={RelativeSource FindAncestor, AncestorType=ToggleButton}}">
-                                <Border Margin="20">
-                                    <Border.Effect>
-                                        <DropShadowEffect Color="#10000000" BlurRadius="20" Direction="-90"
-                                                          RenderingBias="Quality" ShadowDepth="4" />
-                                    </Border.Effect>
+                                   StaysOpen="True"
+                                   x:Name="VolumePopup"
+                                   IsOpen="{Binding IsShowVolumePop}"
+                                   >
+                                <Border BorderBrush="#30000000" BorderThickness="2" PreviewMouseDown="{s:Action PopContentMouseDown}">
                                     <Border Background="#FFFFFF" Padding="20" HorizontalAlignment="Center"
-                                            VerticalAlignment="Center" Height="250" Width="100">
-                                        <Slider
-                                            IsSnapToTickEnabled="True"
-                                            SelectionStart="100"
-                                            TickFrequency="1"
-                                            Minimum="0"
-                                            Maximum="100"
-                                            Value="{Binding Volume}"
-                                            LargeChange="10"
-                                            SmallChange="1"
-                                            Orientation="Vertical" />
+                                            Height="80" Width="450"
+                                            VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock
+                                                FontFamily="{StaticResource Iconfont}"
+                                                FontSize="32"
+                                                Foreground="#70000000"
+                                                Margin="0 0 20 0"
+                                                Text="&#xe831;" />
+                                            <Border VerticalAlignment="Center">
+                                                <Slider
+                                                    Width="400"
+                                                    IsSnapToTickEnabled="True"
+                                                    SelectionStart="100"
+                                                    TickFrequency="1"
+                                                    Minimum="0"
+                                                    Maximum="100"
+                                                    Value="{Binding Volume}"
+                                                    Orientation="Horizontal" />
+                                            </Border>
+                                        </StackPanel>
+                                     
                                     </Border>
                                 </Border>
 
@@ -231,14 +271,27 @@
                             Text="&#xe669;" />
                     </Button>
 
-                </StackPanel>
+                </UniformGrid>
             </Grid>
         </Border>
         <Border
             MinHeight="100"
             MaxHeight="300"
             Background="#1c5076">
-
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ShowPlaylist}"  Value="True">
+                            <Setter Property="Border.Visibility" Value="Visible"></Setter>
+                            <Setter Property="Border.CornerRadius" Value="0 0 4 4"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ShowPlaylist}" Value="False">
+                            <Setter Property="Border.Visibility" Value="Collapsed"></Setter>
+                            <Setter Property="Border.CornerRadius" Value="4 4 0 0"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <!-- <ItemsControl -->
             <!--     ItemsSource="{Binding FileNameItems}" -->
             <!--     ScrollViewer.VerticalScrollBarVisibility="Auto"> -->
@@ -481,7 +534,7 @@
                                             </MultiTrigger.Conditions>
                                             <Setter TargetName="t1" Property="TextElement.Foreground" Value="#429ce3" />
                                             <Setter TargetName="Name" Property="TextElement.Foreground" Value="#429ce3" />
-                                            <!-- <Setter TargetName="t2" Property="TextElement.Foreground" Value="#ffffff" /> -->
+                                            <Setter TargetName="t2" Property="TextElement.Foreground" Value="#429ce3" />
                                             <Setter TargetName="t3" Property="TextElement.Foreground" Value="#429ce3" />
                                             <Setter TargetName="t4" Property="TextElement.Foreground" Value="#429ce3" />
                                         </MultiTrigger>
@@ -493,7 +546,7 @@
                                             </MultiTrigger.Conditions>
                                             <Setter TargetName="t1" Property="TextElement.Foreground" Value="#ffffff" />
                                             <Setter TargetName="Name" Property="TextElement.Foreground" Value="#ffffff" />
-                                            <!-- <Setter TargetName="t2" Property="TextElement.Foreground" Value="#ffffff" /> -->
+                                            <Setter TargetName="t2" Property="TextElement.Foreground" Value="#ffffff" />
                                             <Setter TargetName="t3" Property="TextElement.Foreground" Value="#ffffff" />
                                             <Setter TargetName="t4" Property="TextElement.Foreground" Value="#ffffff" />
                                         </MultiTrigger>

@@ -109,7 +109,7 @@
                 </DockPanel>
 
                 <Border Margin="0 10">
-                    <ContentControl s:View.Model="{Binding MusicViewModel}" />
+                    <UserControl s:View.Model="{Binding MusicViewModel}" />
                     <Border.Style>
                         <Style TargetType="Border">
                             <Style.Triggers>

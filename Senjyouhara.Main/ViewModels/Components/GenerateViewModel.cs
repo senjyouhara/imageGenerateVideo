@@ -145,7 +145,7 @@ public class GenerateViewModel: MyScreen
                     if (string.IsNullOrWhiteSpace(tmp.Title))
                         tmp.Title = tmp.FileName;
                     else
-                        tmp.Title += " - " + string.Join("、", file.Tag.AlbumArtists);
+                        tmp.Title +=  string.IsNullOrWhiteSpace(file.Tag.JoinedArtists) ? string.Empty : " - " + file.Tag.JoinedArtists;
                     tmp.Time = file.Properties.Duration;
                 }
                 
@@ -154,7 +154,7 @@ public class GenerateViewModel: MyScreen
             });
             MusicFileList.AddRange(newList);
             MusicFileList = new List<AudioFileItem>(MusicFileList);
-            _eventAggregator.PublishOnUIThread(new ObservableCollection<FileNameItem>(MusicFileList), "music");
+            _eventAggregator.PublishOnUIThread(new ObservableCollection<AudioFileItem>(MusicFileList), "music");
         }
     }
 

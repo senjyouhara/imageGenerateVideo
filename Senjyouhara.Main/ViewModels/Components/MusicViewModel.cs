@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -16,33 +19,40 @@ using Senjyouhara.Common.Base;
 using Senjyouhara.Common.Log;
 using Senjyouhara.Main.Core.Manager.Dialog;
 using Senjyouhara.Main.Model;
+using Senjyouhara.Main.Views;
 using Senjyouhara.Main.Views.Components;
 using Stylet;
 using StyletIoC;
+using Timer = System.Timers.Timer;
 
 namespace Senjyouhara.Main.ViewModels.Components;
 
 [AddINotifyPropertyChangedInterface]
-public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameItem>>, IDisposable
+public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileItem>>, IDisposable
 {
     private readonly IContainer _container;
     private readonly IEventAggregator _eventAggregator;
 
-    public ObservableCollection<FileNameItem> FileNameItems { get; set; }
+    public ObservableCollection<AudioFileItem> FileNameItems { get; set; }
     
-    public bool IsLoadingTrack { get; set; }
+    public bool IsShowVolumePop { get; set; }
     public bool ShowPause { get; set; }
+    public bool ShowPlaylist { get; set; } = true;
 
     public int Volume { get; set; }
-    public FileNameItem SelectedItem { get; set; }
+    public AudioFileItem SelectedItem { get; set; }
+    
+    public TimeSpan LoadedTime { get; set; }
+    public string LoadedTimeStr => LoadedTime.ToString($"{(LoadedTime.Hours > 0 ? "hh\\:" : "")}mm\\:ss");
 
     private MediaFoundationReader mr;
     private WaveOut wo;
     private Storyboard storyboard;
     private Storyboard storyboard2;
+    private Timer timer;
 
 
-    public DelegateCommand<FileNameItem> StartCommand => new (StartHandler);
+    public DelegateCommand<AudioFileItem> StartCommand => new (StartHandler);
 
     public MusicViewModel(IContainer container, IEventAggregator eventAggregator)
     {
@@ -54,15 +64,42 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
     {
         base.OnViewLoaded();
         _eventAggregator.Subscribe(this, "music");
-        // var shellViewModel = _container.Get<ShellViewModel>();
-        // shellViewModel.View.MouseUp += BarMouseUp;
-        // shellViewModel.View.MouseMove += BarMouseOver;
+      
+        Thread.Sleep(1000);
+        var shellViewModel = _container.Get<MainViewModel>();
+        // var shellView = _container.Get<MainView>();
+        // shellView.MouseUp += BarMouseUp;
+        // shellView.MouseMove += BarMouseOver;
+        // shellView.MouseUp += ((sender, args) =>
+        // {
+        //     IsShowVolumePop = false;
+        // });
+        Application.Current.MainWindow.AddHandler(Mouse.MouseDownEvent, new MouseButtonEventHandler(GalbalPopContentMouseDown), true);
+        View.AddHandler(Mouse.MouseUpEvent, new MouseButtonEventHandler(BarMouseUp), true);
+        View.AddHandler(Mouse.MouseMoveEvent, new MouseEventHandler(BarMouseOver), true);
     }
 
-    
+    private void Timer_Handler()
+    {
+        // // 创建一个定时器，每500毫秒检查一次播放进度
+        timer?.Stop();
+        timer = new (1000);
+        timer.Elapsed += (s, e) =>
+        {
+            if (LoadedTime.TotalSeconds >= SelectedItem.Time.TotalSeconds)
+            {
+                timer?.Stop();
+                return;
+            }
+            LoadedTime = TimeSpan.FromSeconds(mr.CurrentTime.TotalSeconds);
+        };
+        timer.Start();
+        
+    }
 
     private void AudioDispose()
     {
+        timer?.Stop();
         wo?.Stop();
         wo?.Dispose();
         mr?.Close();
@@ -75,14 +112,6 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
         Console.WriteLine($"播放进度: {progress:F2}%");
         if (View is MusicView view)
         {
-            Execute.OnUIThread(() =>
-            {
-                var barWidth = view.Progressbar.ActualWidth;
-                var totalWidth = view.ProgressLine.ActualWidth - barWidth;
-                view.ProgressbarTransform.X = totalWidth * (progress / 100); 
-                view.ProgressReadLine.Width = totalWidth * (progress / 100);
-            });
-
         }
     }
     
@@ -105,7 +134,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
             }
     }
 
-    public void StartHandler(FileNameItem item)
+    public void StartHandler(AudioFileItem item)
     {
         AudioDispose();
         ShowPause = true;
@@ -114,6 +143,8 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
         wo.DeviceNumber = 0;
         wo.Init(mr);
         SelectedItem = item;
+        LoadedTime = TimeSpan.Zero;
+        
         wo.PlaybackStopped += (sender, args) =>
         {
             AudioDispose();
@@ -136,6 +167,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
                     child.To = totalWidth;
                     // child.FillBehavior = FillBehavior.Stop;
                     storyboard.Begin();
+                    Timer_Handler();
                 }
                 
                 if(view.Progressbar.FindResource("ProgressbarAnime") is
@@ -151,14 +183,8 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
                     child2.To = totalWidth;
                     storyboard2.Begin();
                 }
-              
-                
         }
-        // // 创建一个定时器，每500毫秒检查一次播放进度
-        // timer?.Stop();
-        // timer = new (80);
-        // timer.Elapsed += (s, e) => CheckProgress(mr);
-        // timer.Start();
+      
         wo.Play();
     }
 
@@ -187,6 +213,8 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
                 var second = TimeSpan.FromSeconds(mr.TotalTime.TotalSeconds * percentageX);
                 storyboard?.Seek(second);
                 storyboard2?.Seek(second);
+                LoadedTime = second;
+                Timer_Handler();
                 mr?.Seek( Convert.ToInt64(mr.Length * percentageX), SeekOrigin.Begin);
                 wo?.Init(mr);
                 wo?.Play();
@@ -263,8 +291,11 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
                 }
                 
                 var percentageX = Math.Round(positionX / width, 8);
+                var second = TimeSpan.FromSeconds(mr.TotalTime.TotalSeconds * percentageX);
                 Log.Info($"width3: {width}, positionX : {positionX}, percentageX: {percentageX} , second: {mr.TotalTime.TotalSeconds}");
                 mr?.Seek( Convert.ToInt64(mr.Length * percentageX), SeekOrigin.Begin);
+                LoadedTime = second;
+                Timer_Handler();
                 wo?.Init(mr);
                 wo?.Play();
             }
@@ -280,18 +311,32 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
     public void PlayCommand()
     {
         ShowPause = true;
-        wo?.Resume();
-        if (View is MusicView view)
+        if (SelectedItem == null)
         {
-            storyboard?.Resume();
-            storyboard2?.Resume();
+            if (FileNameItems.Count > 0)
+            {
+                StartHandler(FileNameItems[0]);    
+            }
+            
         }
+        else
+        {
+            wo?.Resume();
+            Timer_Handler();
+            if (View is MusicView view)
+            {
+                storyboard?.Resume();
+                storyboard2?.Resume();
+            }    
+        }
+        
     }
 
     public void PauseCommand()
     {
         ShowPause = false;
         wo?.Pause();
+        timer?.Stop();
         if (View is MusicView view)
         {
             storyboard?.Pause();
@@ -325,13 +370,41 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
 
     public void PlayListCommand()
     {
+        ShowPlaylist = !ShowPlaylist;
     }
 
-    public void Handle(ObservableCollection<FileNameItem> message)
+    public void Handle(ObservableCollection<AudioFileItem> message)
     {
         FileNameItems = message;
     }
 
+    public void VolumeClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is ToggleButton btn)
+        {
+            IsShowVolumePop = false;
+            IsShowVolumePop = true;    
+        }
+    }
+    
+    public void GalbalPopContentMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (View is MusicView view)
+        {
+            // 当点击在Popup外部时关闭Popup
+            if (IsShowVolumePop && view.VolumeButton != sender)
+            {
+                IsShowVolumePop = false;
+            }
+            
+        }
+    
+    }
+    
+    public void PopContentMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+    }
 
     public void Dispose()
     {
