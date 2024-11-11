@@ -34,7 +34,7 @@
             <Grid Background="#FFF">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <ui:TitleBar

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +23,7 @@ using StyletIoC;
 namespace Senjyouhara.Main.ViewModels.Components;
 
 [AddINotifyPropertyChangedInterface]
-public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameItem>>
+public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameItem>>, IDisposable
 {
     private readonly IContainer _container;
     private readonly IEventAggregator _eventAggregator;
@@ -32,10 +33,14 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
     public bool IsLoadingTrack { get; set; }
     public bool ShowPause { get; set; }
 
+    public int Volume { get; set; }
+    public FileNameItem SelectedItem { get; set; }
+
     private MediaFoundationReader mr;
     private WaveOut wo;
     private Storyboard storyboard;
     private Storyboard storyboard2;
+
 
     public DelegateCommand<FileNameItem> StartCommand => new (StartHandler);
 
@@ -43,81 +48,18 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
     {
         _container = container;
         _eventAggregator = eventAggregator;
+    }
 
-        FileNameItems = new()
-        {
-            new AudioFileItem()
-            {
-                Uid = Guid.NewGuid().ToString(),
-                OriginFileName = "あたらよ-夏霞",
-                FileName = "あたらよ-夏霞",
-                FilePath = "E:\\KwDownload\\song\\Sixx A.M.-This Is Gonna Hurt.flac",
-                Suffix = "flac",
-                Uri = new Uri("E:\\KwDownload\\song\\YOASOBI-たぶん.flac"),
-            },
-            new FileNameItem()
-            {
-                Uid = Guid.NewGuid().ToString(),
-                OriginFileName = "あたらよ-夏霞",
-                FileName = "あたらよ-夏霞",
-                FilePath = "E:\\KwDownload\\song\\YOASOBI-たぶん.flac",
-                Suffix = "flac",
-                Uri = new Uri("E:\\KwDownload\\song\\YOASOBI-たぶん.flac")
-            },
-            new FileNameItem()
-            {
-                Uid = Guid.NewGuid().ToString(),
-                OriginFileName = "あたらよ-夏霞",
-                FileName = "あたらよ-夏霞",
-                FilePath = "E:\\KwDownload\\song\\YOASOBI-たぶん.flac",
-                Suffix = "flac",
-                Uri = new Uri("E:\\KwDownload\\song\\YOASOBI-たぶん.flac")
-            },
-            new FileNameItem()
-            {
-                Uid = Guid.NewGuid().ToString(),
-                OriginFileName = "あたらよ-夏霞",
-                FileName = "あたらよ-夏霞",
-                FilePath = "E:\\KwDownload\\song\\YOASOBI-たぶん.flac",
-                Suffix = "flac",
-                Uri = new Uri("E:\\KwDownload\\song\\YOASOBI-たぶん.flac")
-            },
-            new FileNameItem()
-            {
-                Uid = Guid.NewGuid().ToString(),
-                OriginFileName = "あたらよ-夏霞",
-                FileName = "あたらよ-夏霞",
-                FilePath = "E:\\KwDownload\\song\\YOASOBI-たぶん.flac",
-                Suffix = "flac",
-                Uri = new Uri("E:\\KwDownload\\song\\YOASOBI-たぶん.flac")
-            },
-        };
+    protected override void OnViewLoaded()
+    {
+        base.OnViewLoaded();
         _eventAggregator.Subscribe(this, "music");
-        var shellViewModel = _container.Get<ShellViewModel>();
-        shellViewModel.View.MouseUp += BarMouseUp;
-        shellViewModel.View.MouseMove += BarMouseOver;
+        // var shellViewModel = _container.Get<ShellViewModel>();
+        // shellViewModel.View.MouseUp += BarMouseUp;
+        // shellViewModel.View.MouseMove += BarMouseOver;
     }
 
-    public void Deconstruct()
-    {
-        _eventAggregator.Unsubscribe(this, "music");
-
-    }
-
-    protected override void OnInitialActivate()
-    {
-        base.OnInitialActivate();
-    }
-
-    protected override void OnActivate()
-    {
-        base.OnActivate();
-    }
-
-    protected override void OnDeactivate()
-    {
-        base.OnDeactivate();
-    }
+    
 
     private void AudioDispose()
     {
@@ -147,6 +89,20 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
     public void PreviousCommand()
     {
         AudioDispose();
+        var index = -1;
+        for (var i = 0; i < FileNameItems.Count; i++)
+            if (FileNameItems[i].Equals(SelectedItem))
+            {
+                index = i;
+                break;
+            }
+
+        if (index >= 0)
+            if (index - 1 >= 0)
+            {
+                SelectedItem = FileNameItems[index - 1];
+                StartHandler(SelectedItem);
+            }
     }
 
     public void StartHandler(FileNameItem item)
@@ -157,6 +113,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
         wo = new();
         wo.DeviceNumber = 0;
         wo.Init(mr);
+        SelectedItem = item;
         wo.PlaybackStopped += (sender, args) =>
         {
             AudioDispose();
@@ -345,6 +302,20 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
     public void NextCommand()
     {
         AudioDispose();
+        var index = -1;
+        for (var i = 0; i < FileNameItems.Count; i++)
+            if (FileNameItems[i].Equals(SelectedItem))
+            {
+                index = i;
+                break;
+            }
+
+        if (index >= 0)
+            if (FileNameItems.Count > index + 1)
+            {
+                SelectedItem = FileNameItems[index + 1];
+                StartHandler(SelectedItem);
+            }
     }
 
     public void VolumeCommand()
@@ -359,5 +330,14 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<FileNameIte
     public void Handle(ObservableCollection<FileNameItem> message)
     {
         FileNameItems = message;
+    }
+
+
+    public void Dispose()
+    {
+        _container?.Dispose();
+        mr?.Dispose();
+        wo?.Dispose();
+        _eventAggregator.Unsubscribe(this, "music");
     }
 }

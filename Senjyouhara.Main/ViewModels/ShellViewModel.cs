@@ -30,7 +30,6 @@ namespace Senjyouhara.Main.ViewModels
         {
             eventAggregator = _eventAggregator;
             container = _container;
-            MainViewModel = container.Get<MainViewModel>();
         }
 
         public string Title { get; set; }
@@ -57,6 +56,7 @@ namespace Senjyouhara.Main.ViewModels
 
         public void CloseCommand()
         {
+            MainViewModel = container.Get<MainViewModel>();
             var closeCommand = MainViewModel.CloseCommand();
             if (closeCommand)
             {
@@ -69,6 +69,7 @@ namespace Senjyouhara.Main.ViewModels
         {
             eventAggregator.Subscribe(this, "ProcessBar");
             Title = AppConfig.Title + " - v" + AppConfig.Version;
+            MainViewModel = container.Get<MainViewModel>();
             var model = MainViewModel;
             Task.Run(() => { ActivateItem(model); });
         }

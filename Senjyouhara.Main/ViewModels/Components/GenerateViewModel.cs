@@ -31,15 +31,26 @@ public class GenerateViewModel: MyScreen
     private readonly IContainer _container;
 
     private FileNameItem ActivateImg;
+    public MusicViewModel MusicViewModel { get; set; }
     public string ImageInput { get; set; }
     public string MusicInput { get; set; }
-
-    public MusicViewModel MusicViewModel { get; set; }
 
     public List<FileNameItem> ImageFileList { get; set; } = new();
     public List<AudioFileItem> MusicFileList { get; set; } = new();
 
+    public List<OptionItem> OutputResolutionList { get; private set; } = new()
+    {
+        new() { Label = "720P", Value = 720 },
+        new() { Label = "1080P", Value = 1080 },
+        new() { Label = "4096P", Value = 4096 }
+    };
+
+    public int OutputResolution { get; set; }
+
+
+
     public bool HasImageList => ImageFileList.Count > 0;
+    public bool HasMusicList => MusicFileList.Count > 0;
 
     public List<Uri> ImageUriList => ImageFileList.Select(item => item.Uri).ToList();
 
@@ -48,7 +59,7 @@ public class GenerateViewModel: MyScreen
         _eventAggregator = eventAggregator;
         _dialogManager = dialogManager;
         _container = container;
-        MusicViewModel = container.Get<MusicViewModel>();
+        OutputResolution = (int)OutputResolutionList[1].Value;
         // ImageUriList = new List<Uri>()
         // {
         //     new("D:/3c6d55fbb2fb4316cb2fde3620a4462309f7d34e.jpg"),
@@ -64,6 +75,7 @@ public class GenerateViewModel: MyScreen
     protected override void OnInitialActivate()
     {
         base.OnInitialActivate();
+        MusicViewModel = _container.Get<MusicViewModel>();
     }
 
     private List<FileNameItem> GetFileNameItems(List<string> files)
@@ -149,7 +161,7 @@ public class GenerateViewModel: MyScreen
             });
             MusicFileList.AddRange(newList);
             MusicFileList = new List<AudioFileItem>(MusicFileList);
-            _eventAggregator.Publish(MusicFileList, "music");
+            _eventAggregator.PublishOnUIThread(new ObservableCollection<FileNameItem>(MusicFileList), "music");
         }
     }
 
@@ -203,6 +215,10 @@ public class GenerateViewModel: MyScreen
                 }
             }
         }
+    }
+
+    public void ProcessCommand()
+    {
     }
 
     public void ImgListItemPreviewCommand(FileNameItem item)

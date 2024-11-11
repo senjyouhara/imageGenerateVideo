@@ -14,12 +14,6 @@ public class AudioFileItem: FileNameItem
     public string Album { get; set; }
     
     public TimeSpan Time { get; set; }
-    
-    public string TimeStr
-    {
-        get
-        {
-            return Time.ToString();
-        }
-    }
+
+    public string TimeStr => Time.ToString($"{(Time.Hours > 0 ? "hh\\:" : "")}mm\\:ss");
 }

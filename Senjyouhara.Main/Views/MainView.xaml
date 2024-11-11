@@ -15,6 +15,9 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <Style TargetType="TabItem">
+            <Setter Property="Padding" Value="0" />
+        </Style>
         <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource RadioButtonBaseStyle}">
             <Setter Property="FocusVisualStyle" Value="{x:Null}"></Setter>
             <Setter Property="Cursor" Value="Hand"></Setter>
@@ -30,12 +33,16 @@
                     DisplayMemberPath="DisplayName"
                     FontSize="14"
                     Background="#ffffff"
+                    Padding="0"
                     Style="{StaticResource TabControlInLine}">
+           
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <ContentControl s:View.Model="{Binding}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"/>
+                    <ContentControl s:View.Model="{Binding}" />
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
+        <!-- <ContentControl s:View.Model="{Binding}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="False"/> -->
+
     </Grid>
 </UserControl>

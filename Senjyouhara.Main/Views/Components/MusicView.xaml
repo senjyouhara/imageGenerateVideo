@@ -38,12 +38,12 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid VerticalAlignment="Center" x:Name="ProgressGrid">
-                    <Border AllowDrop="True" Background="Transparent" Height="9" 
-                            MouseUp="{s:Action SeekTimeLineCommand}"></Border>
+                    <Border AllowDrop="True" Background="Transparent" Height="9"
+                            MouseUp="{s:Action SeekTimeLineCommand}" />
                     <Border x:Name="ProgressLine"
                             Height="2"
                             Background="#000000"
-                            
+
                             Opacity="0.3">
                         <Border.InputBindings>
                         </Border.InputBindings>
@@ -78,8 +78,7 @@
                             <Storyboard x:Key="ProgressbarAnime">
                                 <DoubleAnimation
                                     Storyboard.TargetName="ProgressbarTransform"
-                                    Storyboard.TargetProperty="(TranslateTransform.X)"
-                                     />
+                                    Storyboard.TargetProperty="(TranslateTransform.X)" />
                             </Storyboard>
                         </Border.Resources>
                     </Border>
@@ -175,28 +174,46 @@
                             Text="&#xe672;" />
                     </Button>
                     <!--  volume  -->
-                    <Button
+                    <ToggleButton
                         x:Name="VolumeButton"
                         Margin="13,0,0,0"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center"
                         Command="{s:Action VolumeCommand}"
-                        Style="{StaticResource TransparentButton}"
+                        Style="{StaticResource TransparentToggleButton}"
                         Foreground="{StaticResource MusicFontColor}"
                         ToolTip="音量">
-                        <TextBlock
-                            FontFamily="{StaticResource Iconfont}"
-                            FontSize="32"
-                            Style="{StaticResource TextTrigger}"
-                            Text="&#xe831;" />
-                        <hc:Poptip.Instance>
-                            <hc:Poptip PlacementType="Top">
-                                <hc:Poptip.Content>
-                                    123
-                                </hc:Poptip.Content>
-                            </hc:Poptip>
-                        </hc:Poptip.Instance>
-                    </Button>
+                        <StackPanel>
+                            <TextBlock
+                                FontFamily="{StaticResource Iconfont}"
+                                FontSize="32"
+                                Style="{StaticResource TextTrigger}"
+                                Text="&#xe831;" />
+                            <Popup Placement="Top" HorizontalOffset="-30"
+                                   IsOpen="{Binding IsChecked,Mode=OneWay , RelativeSource={RelativeSource FindAncestor, AncestorType=ToggleButton}}">
+                                <Border Margin="20">
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="#10000000" BlurRadius="20" Direction="-90"
+                                                          RenderingBias="Quality" ShadowDepth="4" />
+                                    </Border.Effect>
+                                    <Border Background="#FFFFFF" Padding="20" HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" Height="250" Width="100">
+                                        <Slider
+                                            IsSnapToTickEnabled="True"
+                                            SelectionStart="100"
+                                            TickFrequency="1"
+                                            Minimum="0"
+                                            Maximum="100"
+                                            Value="{Binding Volume}"
+                                            LargeChange="10"
+                                            SmallChange="1"
+                                            Orientation="Vertical" />
+                                    </Border>
+                                </Border>
+
+                            </Popup>
+                        </StackPanel>
+                    </ToggleButton>
                     <!--  playlist  -->
                     <Button
                         x:Name="PlayListButton"
@@ -355,6 +372,8 @@
                 d:ItemsSource="{d:SampleData ItemCount=5}"
                 BorderThickness="0"
                 ItemsSource="{Binding FileNameItems}"
+                SelectedItem="{Binding SelectedItem}"
+                SelectionMode="Single"
                 ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ListBox.Style>
                     <Style TargetType="ListBox">
@@ -371,208 +390,134 @@
                         </Setter>
                     </Style>
                 </ListBox.Style>
-            
-                <ListBox.Resources>
-            
-                    <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#30000000" />
-                    <SolidColorBrush x:Key="Item.MouseOver.Border" Color="#3DDADADA" />
-                    <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#30FFFFFF" />
-                    <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#3DDADADA" />
-                    <SolidColorBrush x:Key="Item.SelectedInactive.Foreground" Color="#FFFFFFFF" />
-                    <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="#cccccc" />
-                    <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="#FF0B7AFF" />
-                    <SolidColorBrush x:Key="Item.SelectedActive.Foreground" Color="#FFFFFFFF" />
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="BorderBrush" Value="Transparent" />
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        <Setter Property="Margin" Value="0" />
-                        <Setter Property="Padding" Value="0" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ListBoxItem">
-                                    <Border
-                                        x:Name="Bd"
-                                        Padding="{TemplateBinding Padding}"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        SnapsToDevicePixels="true">
-                                        <ContentPresenter
-                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                    </Border>
-            
-                                    <ControlTemplate.Triggers>
-                                        <MultiTrigger>
-                                            <MultiTrigger.Conditions>
-                                                <Condition Property="IsMouseOver" Value="True" />
-                                            </MultiTrigger.Conditions>
-                                            <Setter TargetName="Bd" Property="Background"
-                                                    Value="{StaticResource Item.MouseOver.Background}" />
-                                            <!-- <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.MouseOver.Border}"/> -->
-                                        </MultiTrigger>
-                                        <EventTrigger RoutedEvent="MouseUp">
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <ColorAnimationUsingKeyFrames
-                                                        Storyboard.TargetName="Bd"
-                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                        Duration="0:0:1.5"
-                                                        >
-                                                        <LinearColorKeyFrame Value="#30FFFFFF" KeyTime="0:0:0.1" />
-                                                        <LinearColorKeyFrame Value="#30FFFFFF" KeyTime="0:0:1.4" />
-                                                        <LinearColorKeyFrame Value="Transparent" KeyTime="0:0:1.5" />
-                                                    </ColorAnimationUsingKeyFrames>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                        <!-- <MultiTrigger> -->
-                                        <!--     <MultiTrigger.Conditions> -->
-                                        <!--         ~1~ <Condition Property="Selector.IsSelectionActive" Value="False" /> @1@ -->
-                                        <!--         ~1~ <Condition Property="IsSelected" Value="True" /> @1@ -->
-                                        <!--         <Condition Property="IsSelected" Value="True" /> -->
-                                        <!--     </MultiTrigger.Conditions> -->
-                                        <!--     <Setter TargetName="Bd" Property="Background" -->
-                                        <!--             Value="{StaticResource Item.SelectedInactive.Background}" /> -->
-                                        <!--     ~1~ <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedInactive.Border}"/> @1@ -->
-                                        <!-- </MultiTrigger> -->
-                                        <!-- <MultiTrigger> -->
-                                        <!--     <MultiTrigger.Conditions> -->
-                                        <!--         <Condition Property="Selector.IsSelectionActive" Value="True" /> -->
-                                        <!--         <Condition Property="IsSelected" Value="True" /> -->
-                                        <!--     </MultiTrigger.Conditions> -->
-                                        <!--     <Setter TargetName="Bd" Property="Background" -->
-                                        <!--             Value="{StaticResource Item.SelectedActive.Background}" /> -->
-                                        <!--     ~1~ <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedActive.Border}"/> @1@ -->
-                                        <!-- </MultiTrigger> -->
-                                        <!-- <MultiTrigger> -->
-                                        <!--     <MultiTrigger.Conditions> -->
-                                        <!--         ~1~ <Condition Property="Selector.IsSelectionActive" Value="True" /> @1@ -->
-                                        <!--         <Condition Property="IsSelected" Value="True" /> -->
-                                        <!--     </MultiTrigger.Conditions> -->
-                                        <!--     <Setter Property="Background" -->
-                                        <!--             Value="{StaticResource Item.SelectedActive.Background}" /> -->
-                                        <!--     <Setter TargetName="Bd" Property="Background" -->
-                                        <!--             Value="{StaticResource Item.SelectedActive.Background}" /> -->
-                                        <!-- </MultiTrigger> -->
-                                        <Trigger Property="IsEnabled" Value="False">
-                                            <Setter TargetName="Bd" Property="TextElement.Foreground"
-                                                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-            
-                                </ControlTemplate>
-            
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-            
-                </ListBox.Resources>
-            
+
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border Padding="6,0" Background="Transparent">
-                            <Grid VerticalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="120" />
-                                </Grid.ColumnDefinitions>
-                                <UniformGrid Rows="2" Margin="4 8">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock
-                                            x:Name="t1"
-                                            Margin="0,2,0,0"
-                                            FontFamily="{StaticResource Iconfont}"
-                                            FontSize="18"
-                                            Foreground="#ffffff"
-                                            Text="&#xe66a;" />
-                                        <TextBlock
-                                            FontSize="16"
-                                            Foreground="#ffffff"
-                                            Text="{Binding FileName}" />
-                                    </StackPanel>
-                                    <!-- <TextBlock -->
-                                    <!--     x:Name="t2" -->
-                                    <!--     Margin="0,4,0,0" -->
-                                    <!--     FontSize="16" -->
-                                    <!--     Foreground="#cccccc" -->
-                                    <!--     Text="あたらよ~夏霞" /> -->
-                                </UniformGrid>
-            
-                                <Border Grid.Column="1" VerticalAlignment="Stretch">
-                                    <Border.InputBindings>
-                                        <MouseBinding
-                                            MouseAction="LeftClick"
-                                            Command="{Binding DataContext.StartCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
-                                            CommandParameter="{Binding }">
-                                        </MouseBinding>
-                                    </Border.InputBindings>
-                                    <TextBlock
-                                        x:Name="t3"
-                                        Margin="12,0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="{StaticResource Iconfont}"
-                                        FontSize="32"
-                                        Foreground="{StaticResource MusicFontColor}"
-                                        Opacity="0"
-                                        Text="&#xe66b;" >
-                                    </TextBlock>
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="#30FFFFFF" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                </Border>
-            
-                                <TextBlock
-                                    x:Name="t4"
-                                    Grid.Column="2"
-                                    Margin="12,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="16"
-                                    Foreground="{StaticResource MusicFontColor}"
-                                    Text="{Binding TimeStr}"
-                                    TextAlignment="Right" />
-                            </Grid>
-                        </Border>
-                        <DataTemplate.Triggers>
-                            <Trigger Property="ListBoxItem.IsMouseOver" Value="True">
-                                <Setter TargetName="t1" Property="TextElement.Foreground" Value="#ffffff" />
-                                <Setter TargetName="t2" Property="TextElement.Foreground" Value="#ffffff" />
-                                <Setter TargetName="t3" Property="TextElement.Foreground" Value="#ffffff" />
-                                <Setter TargetName="t4" Property="TextElement.Foreground" Value="#ffffff" />
-                            </Trigger>
-                            <EventTrigger RoutedEvent="ListBoxItem.MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard TargetName="t3" TargetProperty="(TextBlock.Opacity)">
-                                        <DoubleAnimation To="1" Duration="0:0:0.2" >
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="ListBoxItem.MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard TargetName="t3" TargetProperty="(TextBlock.Opacity)">
-                                        <DoubleAnimation To="0" Duration="0:0:0.2" >
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </DataTemplate.Triggers>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border Padding="6,0" Background="Transparent" x:Name="Bd">
+                                        <Grid VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="120" />
+                                            </Grid.ColumnDefinitions>
+                                            <UniformGrid Rows="2" Margin="4 8">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock
+                                                        x:Name="t1"
+                                                        Margin="0,2,0,0"
+                                                        FontFamily="{StaticResource Iconfont}"
+                                                        FontSize="18"
+                                                        Foreground="#ffffff"
+                                                        Text="&#xe66a;" />
+                                                    <TextBlock
+                                                        x:Name="Name"
+                                                        FontSize="16"
+                                                        Foreground="#ffffff"
+                                                        Text="{Binding FileName}" />
+                                                </StackPanel>
+                                                <!-- <TextBlock -->
+                                                <!--     x:Name="t2" -->
+                                                <!--     Margin="0,4,0,0" -->
+                                                <!--     FontSize="16" -->
+                                                <!--     Foreground="#cccccc" -->
+                                                <!--     Text="あたらよ~夏霞" /> -->
+                                            </UniformGrid>
+
+                                            <Border Grid.Column="1" VerticalAlignment="Stretch">
+                                                <Border.InputBindings>
+                                                    <MouseBinding
+                                                        MouseAction="LeftClick"
+                                                        Command="{Binding DataContext.StartCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}}"
+                                                        CommandParameter="{Binding }" />
+                                                </Border.InputBindings>
+                                                <TextBlock
+                                                    x:Name="t3"
+                                                    Margin="12,0"
+                                                    VerticalAlignment="Center"
+                                                    FontFamily="{StaticResource Iconfont}"
+                                                    FontSize="32"
+                                                    Foreground="{StaticResource MusicFontColor}"
+                                                    Opacity="0"
+                                                    Text="&#xe66b;" />
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#30FFFFFF" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                            </Border>
+
+                                            <TextBlock
+                                                x:Name="t4"
+                                                Grid.Column="2"
+                                                Margin="12,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="16"
+                                                Foreground="{StaticResource MusicFontColor}"
+                                                Text="{Binding TimeStr}"
+                                                TextAlignment="Right" />
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#30000000" TargetName="Bd" />
+                                        </Trigger>
+
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Selector.IsSelected" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter TargetName="t1" Property="TextElement.Foreground" Value="#429ce3" />
+                                            <Setter TargetName="Name" Property="TextElement.Foreground" Value="#429ce3" />
+                                            <!-- <Setter TargetName="t2" Property="TextElement.Foreground" Value="#ffffff" /> -->
+                                            <Setter TargetName="t3" Property="TextElement.Foreground" Value="#429ce3" />
+                                            <Setter TargetName="t4" Property="TextElement.Foreground" Value="#429ce3" />
+                                        </MultiTrigger>
+
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Selector.IsSelected" Value="False" />
+                                                <Condition Property="ListBoxItem.IsMouseOver" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter TargetName="t1" Property="TextElement.Foreground" Value="#ffffff" />
+                                            <Setter TargetName="Name" Property="TextElement.Foreground" Value="#ffffff" />
+                                            <!-- <Setter TargetName="t2" Property="TextElement.Foreground" Value="#ffffff" /> -->
+                                            <Setter TargetName="t3" Property="TextElement.Foreground" Value="#ffffff" />
+                                            <Setter TargetName="t4" Property="TextElement.Foreground" Value="#ffffff" />
+                                        </MultiTrigger>
+
+                                        <EventTrigger RoutedEvent="ListBoxItem.MouseEnter">
+                                            <BeginStoryboard>
+                                                <Storyboard TargetName="t3" TargetProperty="(TextBlock.Opacity)">
+                                                    <DoubleAnimation To="1" Duration="0:0:0.2" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="ListBoxItem.MouseLeave">
+                                            <BeginStoryboard>
+                                                <Storyboard TargetName="t3" TargetProperty="(TextBlock.Opacity)">
+                                                    <DoubleAnimation To="0" Duration="0:0:0.2" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </ListBox>
         </Border>
     </StackPanel>
