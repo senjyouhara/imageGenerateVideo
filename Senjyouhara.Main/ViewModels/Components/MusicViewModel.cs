@@ -147,7 +147,8 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
         
         wo.PlaybackStopped += (sender, args) =>
         {
-            AudioDispose();
+            NextCommand();
+            // AudioDispose();
         };
         if (View is MusicView view)
         {
@@ -216,7 +217,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
                 LoadedTime = second;
                 Timer_Handler();
                 mr?.Seek( Convert.ToInt64(mr.Length * percentageX), SeekOrigin.Begin);
-                wo?.Init(mr);
+                // wo?.Init(mr);
                 wo?.Play();
             }
         }
@@ -296,7 +297,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
                 mr?.Seek( Convert.ToInt64(mr.Length * percentageX), SeekOrigin.Begin);
                 LoadedTime = second;
                 Timer_Handler();
-                wo?.Init(mr);
+                // wo?.Init(mr);
                 wo?.Play();
             }
         }
