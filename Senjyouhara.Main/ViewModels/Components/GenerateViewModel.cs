@@ -6,17 +6,18 @@ using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using HandyControl.Controls;
 using Microsoft.Win32;
 using PropertyChanged;
 using Senjyouhara.Common.Utils;
 using Senjyouhara.Main.Core.Manager.Dialog;
 using Senjyouhara.Main.Model;
 using Senjyouhara.Main.Views.Components;
-using Senjyouhara.UI.Controls;
 using Stylet;
 using StyletIoC;
 using TagLib.Riff;
 using File = System.IO.File;
+using ImageBrowser = Senjyouhara.UI.Controls.ImageBrowser;
 
 namespace Senjyouhara.Main.ViewModels.Components;
 
@@ -47,7 +48,7 @@ public class GenerateViewModel: MyScreen
 
     public int OutputResolution { get; set; }
 
-
+    private int Index = 1;
 
     public bool HasImageList => ImageFileList.Count > 0;
     public bool HasMusicList => MusicFileList.Count > 0;
@@ -212,6 +213,28 @@ public class GenerateViewModel: MyScreen
 
     public void ProcessCommand()
     {
+        if (ImageFileList.Count <= 0)
+        {
+            MessageBox.Show($@"请上传图片文件", @"添加失败", System.Windows.MessageBoxButton.OK);
+            return;
+        }
+
+        if (MusicFileList.Count <= 0)
+        {
+            MessageBox.Show($@"请上传音频文件", @"添加失败", System.Windows.MessageBoxButton.OK);
+            return;
+        }
+
+        var queueModel = new QueueModel()
+        {
+            ImageList = ImageFileList,
+            AudioList = MusicFileList,
+            OutputResolution = OutputResolution,
+            Uid = Guid.NewGuid().ToString(),
+            CreateTime = DateTime.Now,
+            QueueName = $"队列{Index++}"
+        };
+        _eventAggregator.PublishOnUIThread(queueModel, "queue");
     }
 
     public void ImgListItemPreviewCommand(FileNameItem item)
@@ -222,5 +245,4 @@ public class GenerateViewModel: MyScreen
         };
         img.Show();
     }
-    
 }

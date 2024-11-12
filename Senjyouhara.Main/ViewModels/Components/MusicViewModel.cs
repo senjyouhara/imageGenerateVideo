@@ -377,7 +377,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
 
     public void VolumeCommand()
     {
-        wo.Volume = Volume / 100; // 设置音量 0~1
+        if (wo != null) wo.Volume = Volume / 100; // 设置音量 0~1
     }
 
     public void PlayListCommand()

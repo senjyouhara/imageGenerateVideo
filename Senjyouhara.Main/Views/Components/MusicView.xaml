@@ -224,8 +224,8 @@
                                 <Border BorderBrush="#30000000" BorderThickness="2"
                                         MouseDown="{s:Action PopContentMouseDown}">
                                     <Grid Background="#FFFFFF">
-                                        <StackPanel Orientation="Horizontal" Margin="16" HorizontalAlignment="Center"
-                                                    Height="70" Width="500">
+                                        <StackPanel Orientation="Horizontal" Margin="8" HorizontalAlignment="Center"
+                                                    Height="80" Width="500">
                                             <TextBlock
                                                 VerticalAlignment="Center"
                                                 FontFamily="{StaticResource Iconfont}"
@@ -236,7 +236,6 @@
                                                 VerticalAlignment="Center"
                                                 Style="{StaticResource BeautifySliderStyle}"
                                                 Width="400"
-                                                Height="20"
                                                 TickFrequency="1"
                                                 Minimum="0"
                                                 ValueChanged="{s:Action Slider_ValueChanged}"

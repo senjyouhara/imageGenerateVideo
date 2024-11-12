@@ -54,10 +54,6 @@
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Senjyouhara.Common\Senjyouhara.Common.csproj" />
-    <ProjectReference Include="..\Senjyouhara.UI\Senjyouhara.UI.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
@@ -94,4 +90,9 @@
 		</Resource>
 		<Resource Include="icon.png" />
   </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\common\Senjyouhara.Common\Senjyouhara.Common.csproj"/>
+        <ProjectReference Include="..\common\Senjyouhara.UI\Senjyouhara.UI.csproj"/>
+        <ProjectReference Include="..\common\updater\updater.csproj"/>
+    </ItemGroup>
 </Project>

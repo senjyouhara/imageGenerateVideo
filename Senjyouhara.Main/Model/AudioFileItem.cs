@@ -6,7 +6,6 @@ namespace Senjyouhara.Main.Model;
 [AddINotifyPropertyChangedInterface]
 public class AudioFileItem: FileNameItem
 {
-
     public string Title { get; set; }
     
     public string Art { get; set; }
