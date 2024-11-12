@@ -39,11 +39,13 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
     public bool ShowPause { get; set; }
     public bool ShowPlaylist { get; set; } = true;
 
-    public int Volume { get; set; }
+    public int Volume { get; set; } = 100;
     public AudioFileItem SelectedItem { get; set; }
     
     public TimeSpan LoadedTime { get; set; }
+    public TimeSpan TotalTime { get; set; }
     public string LoadedTimeStr => LoadedTime.ToString($"{(LoadedTime.Hours > 0 ? "hh\\:" : "")}mm\\:ss");
+    public string TotalTimeStr => TotalTime.ToString($"{(TotalTime.Hours > 0 ? "hh\\:" : "")}mm\\:ss");
 
     private MediaFoundationReader mr;
     private WaveOut wo;
@@ -64,19 +66,17 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
     {
         base.OnViewLoaded();
         _eventAggregator.Subscribe(this, "music");
-      
-        Thread.Sleep(200);
-        var shellViewModel = _container.Get<MainViewModel>();
-        // var shellView = _container.Get<MainView>();
-        // shellView.MouseUp += BarMouseUp;
-        // shellView.MouseMove += BarMouseOver;
-        // shellView.MouseUp += ((sender, args) =>
-        // {
-        //     IsShowVolumePop = false;
-        // });
-        Application.Current.MainWindow.AddHandler(Mouse.MouseDownEvent, new MouseButtonEventHandler(GalbalPopContentMouseDown), true);
-        View.AddHandler(Mouse.MouseUpEvent, new MouseButtonEventHandler(BarMouseUp), true);
-        View.AddHandler(Mouse.MouseMoveEvent, new MouseEventHandler(BarMouseOver), true);
+
+        Application.Current.MainWindow.RemoveHandler(Mouse.MouseDownEvent,
+            new MouseButtonEventHandler(GalbalPopContentMouseDown));
+        Application.Current.MainWindow.AddHandler(Mouse.MouseDownEvent,
+            new MouseButtonEventHandler(GalbalPopContentMouseDown), false);
+        Application.Current.MainWindow.Deactivated -= HiddenVolumePop;
+        Application.Current.MainWindow.Deactivated += HiddenVolumePop;
+        View.RemoveHandler(Mouse.MouseUpEvent, new MouseButtonEventHandler(BarMouseUp));
+        View.RemoveHandler(Mouse.MouseMoveEvent, new MouseEventHandler(BarMouseOver));
+        View.AddHandler(Mouse.MouseUpEvent, new MouseButtonEventHandler(BarMouseUp), false);
+        View.AddHandler(Mouse.MouseMoveEvent, new MouseEventHandler(BarMouseOver), false);
     }
 
     private void Timer_Handler()
@@ -154,8 +154,9 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
         wo.Init(mr);
         SelectedItem = item;
         LoadedTime = TimeSpan.Zero;
-
+        TotalTime = mr.TotalTime;
         wo.PlaybackStopped += PlaybackStopped;
+        VolumeCommand();
         if (View is MusicView view)
         {
                 double progress = (double)mr.Position / mr.Length * 100;
@@ -376,7 +377,7 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
 
     public void VolumeCommand()
     {
-        // wo.Volume = 1f;    // 设置音量 0~1
+        wo.Volume = Volume / 100; // 设置音量 0~1
     }
 
     public void PlayListCommand()
@@ -391,8 +392,6 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
     }
     public void ListItemPlayMouseDown(object sender,  MouseButtonEventArgs e)
     {
-        e.Handled = true;
-        // StartHandler(SelectedItem);
     }
     
     public void Handle(ObservableCollection<AudioFileItem> message)
@@ -407,6 +406,11 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
             IsShowVolumePop = false;
             IsShowVolumePop = true;    
         }
+    }
+
+    private void HiddenVolumePop(object sender, EventArgs e)
+    {
+        IsShowVolumePop = false;
     }
     
     public void GalbalPopContentMouseDown(object sender, MouseButtonEventArgs e)
@@ -426,6 +430,12 @@ public class MusicViewModel : MyScreen, IHandle<ObservableCollection<AudioFileIt
     public void PopContentMouseDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
+    }
+
+    public void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        e.Handled = true;
+        VolumeCommand();
     }
 
     public void Dispose()

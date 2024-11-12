@@ -23,7 +23,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
+        
     </UserControl.Resources>
 
     <StackPanel Orientation="Vertical">
@@ -65,7 +65,6 @@
                     <Border x:Name="ProgressLine"
                             Height="2"
                             Background="#000000"
-
                             Opacity="0.3">
                         <Border.InputBindings>
                         </Border.InputBindings>
@@ -122,7 +121,7 @@
                                TextAlignment="Left"
                         FontSize="16"
                         Foreground="#cccccc"
-                        Text="{Binding SelectedItem.TimeStr}" Margin="10 0 00 0"></TextBlock>
+                               Text="{Binding TotalTimeStr}" Margin="10 0 0 0" />
                 </Grid>
                 <UniformGrid
                     Grid.Row="1"
@@ -149,8 +148,7 @@
                         <!--  Ring  -->
                         <!-- <ProgressBar Value="40"></ProgressBar> -->
                         <!-- <dc:ProgressRing Width="20" Height="20" Foreground="{DynamicResource Brush_PrimaryText}" IsActive="True" Visibility="{Binding IsLoadingTrack,Converter={StaticResource BooleanToVisibilityConverter}}"/> -->
-                        <Grid
-                            Visibility="{Binding IsLoadingTrack, Converter={StaticResource InvertingBooleanToVisibilityConverter}}">
+                        <Grid>
                             <!--  Play  -->
                             <Button
                                 x:Name="PlayButton"
@@ -207,7 +205,6 @@
                         Margin="13,0,0,0"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center"
-                        Command="{s:Action VolumeCommand}"
                         Style="{StaticResource TransparentToggleButton}"
                         Foreground="{StaticResource MusicFontColor}"
                         Click="{s:Action VolumeClick}"
@@ -219,36 +216,39 @@
                                 Style="{StaticResource TextTrigger}"
                                 ToolTip="音量"
                                 Text="&#xe831;" />
-                            <Popup Placement="Top" HorizontalOffset="-30"
-                                   StaysOpen="True"
+                            <Popup Placement="Top" HorizontalOffset="-290"
+                                   AllowsTransparency="True"
                                    x:Name="VolumePopup"
                                    IsOpen="{Binding IsShowVolumePop}"
-                                   >
-                                <Border BorderBrush="#30000000" BorderThickness="2" PreviewMouseDown="{s:Action PopContentMouseDown}">
-                                    <Border Background="#FFFFFF" Padding="20" HorizontalAlignment="Center"
-                                            Height="80" Width="450"
-                                            VerticalAlignment="Center">
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            >
+                                <Border BorderBrush="#30000000" BorderThickness="2"
+                                        MouseDown="{s:Action PopContentMouseDown}">
+                                    <Grid Background="#FFFFFF">
+                                        <StackPanel Orientation="Horizontal" Margin="16" HorizontalAlignment="Center"
+                                                    Height="70" Width="500">
                                             <TextBlock
+                                                VerticalAlignment="Center"
                                                 FontFamily="{StaticResource Iconfont}"
                                                 FontSize="32"
-                                                Foreground="#70000000"
-                                                Margin="0 0 20 0"
+                                                Foreground="#777777"
                                                 Text="&#xe831;" />
-                                            <Border VerticalAlignment="Center">
-                                                <Slider
-                                                    Width="400"
-                                                    IsSnapToTickEnabled="True"
-                                                    SelectionStart="100"
-                                                    TickFrequency="1"
-                                                    Minimum="0"
-                                                    Maximum="100"
-                                                    Value="{Binding Volume}"
-                                                    Orientation="Horizontal" />
-                                            </Border>
+                                            <Slider
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource BeautifySliderStyle}"
+                                                Width="400"
+                                                Height="20"
+                                                TickFrequency="1"
+                                                Minimum="0"
+                                                ValueChanged="{s:Action Slider_ValueChanged}"
+                                                Value="{Binding Volume}"
+                                                Orientation="Horizontal" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="16"
+                                                Foreground="#777777"
+                                                Text="{Binding Volume}" />
                                         </StackPanel>
-                                     
-                                    </Border>
+                                    </Grid>
                                 </Border>
 
                             </Popup>
