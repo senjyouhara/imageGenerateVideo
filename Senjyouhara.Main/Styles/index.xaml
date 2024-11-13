@@ -3,7 +3,7 @@
 
 
     <!--  TransparentButton  -->
-    <Style x:Key="TransparentButton" TargetType="{x:Type Button}">
+    <Style x:Key="TransparentButton" x:Shared="False" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template">
@@ -20,6 +20,7 @@
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             Content="{TemplateBinding Content}" />
                     </Border>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
